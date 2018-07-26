@@ -1,0 +1,23 @@
+﻿<Window x:Class="WpfDemo.Tree"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Osc="clr-namespace:OscGuiControl;assembly=OscGuiControl"
+				xmlns:local="clr-namespace:WpfDemo"
+        mc:Ignorable="d"
+        Title="Tree" Height="450" Width="800">
+    <Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
+		<Label Height="40" VerticalContentAlignment="Center" x:Name="CurrentRoute" Background="#3a3a3a" Foreground="GreenYellow"/>
+		<Osc:OscTreeGui Grid.Row="1" x:Name="OscTree"/>
+		<StackPanel Grid.Row="2" Orientation="Horizontal">
+			<Button Height="40" Width="80" Margin="5" Content="OK" IsEnabled="False" x:Name="OkButton" Click="OkClicked"/>
+			<Button Height="40" Width="80" Margin="5" Content="Cancel" IsEnabled="True" Click="CancelClicked"/>
+		</StackPanel>
+	</Grid>
+</Window>

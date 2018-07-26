@@ -1,0 +1,35 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:OscGuiControl"
+		
+	>
+	
+	<Style TargetType="{x:Type local:OscGUI}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type local:OscGUI}">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="auto"/>
+							<RowDefinition Height="*"/>
+						</Grid.RowDefinitions>
+						<StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+							<Label x:Name="NameLabel" Foreground="White" Background="Transparent" FontSize="20" FontWeight="Bold"/>
+							<CheckBox x:Name="EditCheckbox" Content="Edit" Foreground="White" Margin="5"/>
+							<Button x:Name="MergeButton" Content="Merge" Margin="5"/>
+							<Button x:Name="SplitHButton" Content="Split H" Margin="5" />
+							<Button x:Name="SplitVButton" Content="Split V" Margin="5"/>
+						</StackPanel>
+						
+						<Grid Grid.Row="1" x:Name="BaseGrid" Background="#1a1a1a">
+
+						</Grid>
+					</Grid>
+					
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+</ResourceDictionary>
