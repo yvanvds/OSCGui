@@ -8,16 +8,14 @@ using System.Windows.Media;
 
 namespace OscGuiControl.Controls
 {
-	public class Slider : yGuiWPF.Controls.Slider, IOscObject, ISender
+	public class Slider : yGuiWPF.Controls.Slider, OscTree.IOscObject, IJsonInterface, IPropertyInterface
 	{
 		static private PropertyCollection properties = null;
 		public PropertyCollection Properties { get => properties; }
 
-		private OscObjectRoutes routes = new OscObjectRoutes();
-		public OscObjectRoutes Routes => routes;
-
-		private OscAddress address = new OscAddress();
-		public OscAddress Address => address;
+		private OscTree.Object oscObject;
+		public OscTree.Object OscObject => oscObject;
+		public OscTree.Routes Targets => oscObject.Targets;
 
 		static private int id = 1;
 
@@ -30,52 +28,45 @@ namespace OscGuiControl.Controls
 			properties.Add("Color", "Color", "Appearance");
 			properties.Add("Background", "Background", "Appearance");
 			properties.Add("Accent", "Accent", "Appearance");
-			properties.Add("Receivers", "Receivers", "Events");
+			properties.Add("Targets", "Targets", "Events");
 		}
 
 		public Slider()
 		{
-			address.UID = OscTree.GenerateUID();
-			address.Name = "Slider" + id++;
+			oscObject = new OscTree.Object(new OscTree.Address("Slider" + id++));
 
-			routes.Add("Value", (args) =>
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Value", (args) =>
 			{
 				Value = OscParser.ToFloat(args);
-			});
+			}));
 
-			routes.Add("Minimum", (args) =>
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Minimum", (args) =>
 			{
 				Minimum = OscParser.ToFloat(args);
-			});
+			}));
 
-			routes.Add("Maximum", (args) =>
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Maximum", (args) =>
 			{
 				Maximum = OscParser.ToFloat(args);
-			});
+			}));
 
 			Changed += (s, e) =>
 			{
-				if (Receivers != null)
-				{
-					foreach (var receiver in Receivers.List)
-					{
-						OscSender.Send(receiver, Value);
-					}
-				}
+				OscObject.Send(Value);
 			};
 		}
 
 		public string ObjName
 		{
-			get => address.Name;
-			set => address.Name = value;
+			get => OscObject.Address.Name;
+			set => OscObject.Address.Name = value;
 		}
 
 		public new string Name => ObjName;
 
-		public string UID
+		public string ID
 		{
-			get => address.UID;
+			get => OscObject.Address.ID;
 		}
 
 		public Color Color
@@ -96,32 +87,29 @@ namespace OscGuiControl.Controls
 			set => Handle = new SolidColorBrush(value);
 		}
 
-
-		public OscAddressList Receivers { get; set; } = new OscAddressList();
-
 		public JObject ToJSON()
 		{
-			OscJsonObject result = new OscJsonObject("Slider", UID, Name);
+			OscJsonObject result = new OscJsonObject("Slider", ID, Name);
 			result.Minimum = Minimum;
 			result.Maximum = Maximum;
 			result.Color = ForeGround.Color;
 			result.Background = BackGround.Color;
 			result.Handle = Handle.Color;
-			result.Receivers = Receivers;
+			result.Targets = OscObject.Targets;
 			return result.Get();
 		}
 
 		public bool LoadJSON(JObject obj)
 		{
 			OscJsonObject json = new OscJsonObject(obj);
-			Address.UID = json.UID;
+			OscObject.Address.ID = json.UID;
 			ObjName = json.Name;
 			Minimum = json.Minimum;
 			Maximum = json.Maximum;
 			ForeGround = new SolidColorBrush(json.Color);
 			Handle = new SolidColorBrush(json.Handle);
 			BackGround = new SolidColorBrush(json.Background);
-			Receivers = json.Receivers;
+			OscObject.Targets = json.Targets;
 			return true;
 		}
 	}

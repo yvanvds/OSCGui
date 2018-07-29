@@ -19,29 +19,36 @@ namespace OscGuiControl.Windows
 	/// </summary>
 	public partial class TreeWindow : Window
 	{
-		public OscAddress CurrentAddress = null;
+		public OscTree.Route CurrentRoute = null;
 
 		public TreeWindow()
 		{
 			InitializeComponent();
-			OscTree.OnRouteChanged += () =>
+		}
+
+		public void SetRoot(OscTree.Tree root)
+		{
+			TreeGui.SetRoot(root);
+			TreeGui.OnRouteChanged += () =>
 			{
-				OkButton.IsEnabled = (OscTree.SelectedRoute != null);
-				if (OscTree.SelectedRoute != null)
+				OkButton.IsEnabled = (TreeGui.SelectedRoute != null);
+				if (TreeGui.SelectedRoute != null)
 				{
-					CurrentRoute.Content = OscTree.SelectedRoute.Address;
+					TreeGui.SelectedRoute.CurrentStep = 0;
+					TreeGui.SelectedRoute.ScreenName = root.GetNameOfRoute(TreeGui.SelectedRoute);
+					CurrentRouteName.Content = TreeGui.SelectedRoute.ScreenName;
 				}
 				else
 				{
-					CurrentRoute.Content = "";
+					CurrentRouteName.Content = "";
 				}
 			};
 		}
 
-		public void SetRoute(OscAddress address)
+		public void SetRoute(OscTree.Route route)
 		{
-			CurrentAddress = address;
-			OscTree.SetRoute(address);
+			CurrentRoute = route;
+			TreeGui.SetRoute(route);
 		}
 
 		private void CancelClicked(object sender, RoutedEventArgs e)
@@ -51,7 +58,7 @@ namespace OscGuiControl.Windows
 
 		private void OkClicked(object sender, RoutedEventArgs e)
 		{
-			CurrentAddress = OscTree.SelectedRoute;
+			CurrentRoute = TreeGui.SelectedRoute;
 			Close();
 		}
 	}

@@ -8,18 +8,14 @@ using Newtonsoft.Json.Linq;
 
 namespace OscGuiControl.Controls
 {
-	public class XYPad : yGuiWPF.Controls.XYPad, IOscObject, ISender
+	public class XYPad : yGuiWPF.Controls.XYPad, OscTree.IOscObject, IJsonInterface, IPropertyInterface
 	{
 		static private PropertyCollection properties = null;
 		public PropertyCollection Properties { get => properties; }
 
-		private OscObjectRoutes routes = new OscObjectRoutes();
-		public OscObjectRoutes Routes => routes;
-
-		private OscAddress address = new OscAddress();
-		public OscAddress Address => address;
-
-		public OscAddressList Receivers { get; set; } = new OscAddressList();
+		private OscTree.Object oscObject;
+		public OscTree.Object OscObject => oscObject;
+		public OscTree.Routes Targets => oscObject.Targets;
 
 		static private int id = 1;
 
@@ -30,46 +26,40 @@ namespace OscGuiControl.Controls
 			properties.Add("Color", "Color", "Appearance");
 			properties.Add("Centered", "Centered");
 			properties.Add("ShowValue");
+			properties.Add("Targets", "Targets", "Events");
 		}
 
 		public XYPad()
 		{
-			address.UID = OscTree.GenerateUID();
-			address.Name = "Slider" + id++;
+			oscObject = new OscTree.Object(new OscTree.Address("XYPad" + id++));
 
-			routes.Add("Coordinate", (args) =>
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Coordinate", (args) =>
 			{
 				Value = OscParser.ToPoint(args);
-			});
+			}));
 
-			routes.Add("Centered", (args) =>
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Centered", (args) =>
 			{
 				Centered = OscParser.ToBool(args);
-			});
+			}));
 
 			OnValueChanged += (s, e) =>
 			{
-				if (Receivers != null)
-				{
-					foreach (var receiver in Receivers.List)
-					{
-						OscSender.Send(receiver, new object[] { Value.X, Value.Y });
-					}
-				}
+				OscObject.Send(new object[] { Value.X, Value.Y });
 			};
 		}
 
 		public string ObjName
 		{
-			get => address.Name;
-			set => address.Name = value;
+			get => OscObject.Address.Name;
+			set => OscObject.Address.Name = value;
 		}
 
 		public new string Name => ObjName;
 
-		public string UID
+		public string ID
 		{
-			get => address.UID;
+			get => OscObject.Address.ID;
 		}
 
 		public Color Color
@@ -84,23 +74,23 @@ namespace OscGuiControl.Controls
 
 		public JObject ToJSON()
 		{
-			OscJsonObject result = new OscJsonObject("XYPad", UID, Name);
+			OscJsonObject result = new OscJsonObject("XYPad", ID, Name);
 			result.Color = Color;
 			result.Centered = Centered;
 			result.ShowValue = ShowValue;
-			result.Receivers = Receivers;
+			result.Targets = OscObject.Targets;
 			return result.Get();
 		}
 
 		public bool LoadJSON(JObject obj)
 		{
 			OscJsonObject json = new OscJsonObject(obj);
-			Address.UID = json.UID;
+			OscObject.Address.ID = json.UID;
 			ObjName = json.Name;
 			Color = json.Color;
 			Centered = json.Centered;
 			ShowValue = json.ShowValue;
-			Receivers = json.Receivers;
+			OscObject.Targets = json.Targets;
 			return true;
 		}
 	}

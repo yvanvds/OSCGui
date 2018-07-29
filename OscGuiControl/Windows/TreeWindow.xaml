@@ -44,8 +44,8 @@
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="auto"/>
 		</Grid.RowDefinitions>
-		<Label Height="40" VerticalContentAlignment="Center" x:Name="CurrentRoute" Background="#3a3a3a" Foreground="GreenYellow"/>
-		<osc:OscTreeGui Grid.Row="1" x:Name="OscTree"/>
+		<Label Height="40" VerticalContentAlignment="Center" x:Name="CurrentRouteName" Background="#3a3a3a" Foreground="GreenYellow"/>
+		<osc:OscTreeGui Grid.Row="1" x:Name="TreeGui"/>
 		<StackPanel Grid.Row="2" Orientation="Horizontal">
 			<Button BorderBrush="Green" Height="40" Width="80" Margin="5" Content="OK" IsEnabled="False" x:Name="OkButton" Click="OkClicked"/>
 			<Button Height="40" Width="80" Margin="5" Content="Cancel" IsEnabled="True" Click="CancelClicked"/>

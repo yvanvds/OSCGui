@@ -20,7 +20,7 @@ namespace WpfDemo
 	/// </summary>
 	public partial class Tree : Window
 	{
-		public OscAddress CurrentAddress = null;
+		public OscTree.Route CurrentAddress = null;
 
 		public Tree()
 		{
@@ -30,7 +30,7 @@ namespace WpfDemo
 				OkButton.IsEnabled = (OscTree.SelectedRoute != null);
 				if(OscTree.SelectedRoute != null)
 				{
-					CurrentRoute.Content = OscTree.SelectedRoute.Address;
+					CurrentRoute.Content = OscTree.SelectedRoute.OriginalName;
 				} else
 				{
 					CurrentRoute.Content = "";
@@ -38,7 +38,7 @@ namespace WpfDemo
 			}; 
 		}
 
-		public void SetRoute(OscAddress address)
+		public void SetRoute(OscTree.Route address)
 		{
 			CurrentAddress = address;
 			OscTree.SetRoute(address);

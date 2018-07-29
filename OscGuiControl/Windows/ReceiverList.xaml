@@ -83,7 +83,7 @@
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*"/>
 						</Grid.ColumnDefinitions>
-						<TextBlock Grid.Column="0" Text="{Binding Address}" Foreground="White" Background="Black" HorizontalAlignment="Stretch"/>
+						<TextBlock Grid.Column="0" Text="{Binding ScreenName}" Foreground="White" Background="Black" HorizontalAlignment="Stretch"/>
 					</Grid>
 					
 				</DataTemplate>

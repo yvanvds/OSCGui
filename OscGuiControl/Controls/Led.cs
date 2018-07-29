@@ -8,16 +8,13 @@ using Newtonsoft.Json.Linq;
 
 namespace OscGuiControl.Controls
 {
-	class Led : yGuiWPF.Controls.Led, IOscObject
+	class Led : yGuiWPF.Controls.Led, OscTree.IOscObject, IJsonInterface, IPropertyInterface
 	{
 		static private PropertyCollection properties = null;
 		public PropertyCollection Properties { get => properties; }
 
-		private OscObjectRoutes routes = new OscObjectRoutes();
-		public OscObjectRoutes Routes => routes;
-
-		private OscAddress address = new OscAddress();
-		public OscAddress Address => address;
+		private OscTree.Object oscObject;
+		public OscTree.Object OscObject => oscObject;
 
 		static private int id = 1;
 
@@ -31,26 +28,25 @@ namespace OscGuiControl.Controls
 
 		public Led()
 		{
-			address.UID = OscTree.GenerateUID();
-			address.Name = "Led" + id++;
+			oscObject = new OscTree.Object(new OscTree.Address("Led" + id++));
 
-			routes.Add("Blink", (args) =>
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Blink", (args) =>
 			{
 				Blink(100);
-			});
+			}));
 		}
 
 		public string ObjName
 		{
-			get => address.Name;
-			set => address.Name = value;
+			get => OscObject.Address.Name;
+			set => OscObject.Address.Name = value;
 		}
 
 		public new string Name => ObjName;
 
-		public string UID
+		public string ID
 		{
-			get => address.UID;
+			get => OscObject.Address.ID;
 		}
 
 		public Color BrushColor
@@ -61,7 +57,7 @@ namespace OscGuiControl.Controls
 
 		public JObject ToJSON()
 		{
-			OscJsonObject result = new OscJsonObject("Led", UID, Name);
+			OscJsonObject result = new OscJsonObject("Led", ID, Name);
 			result.Color = BrushColor;
 			result.Scale = Scale;
 			return result.Get();
@@ -70,7 +66,7 @@ namespace OscGuiControl.Controls
 		public bool LoadJSON(JObject obj)
 		{
 			OscJsonObject json = new OscJsonObject(obj);
-			Address.UID = json.UID;
+			OscObject.Address.ID = json.UID;
 			ObjName = json.Name;
 			Color = new SolidColorBrush(json.Color);
 			Scale = json.Scale;

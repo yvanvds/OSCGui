@@ -96,7 +96,7 @@ namespace OscGuiControl.Controls
 			pad.IsEnabled = false;
 			pad.IsHitTestVisible = false;
 			Element.Child = pad;
-			parent.Tree.Add(pad);
+			parent.OscTree.Add(pad.OscObject);
 		}
 
 		private void AddXYPad(object sender, RoutedEventArgs e)
@@ -105,7 +105,7 @@ namespace OscGuiControl.Controls
 			pad.IsEnabled = false;
 			pad.IsHitTestVisible = false;
 			Element.Child = pad;
-			parent.Tree.Add(pad);
+			parent.OscTree.Add(pad.OscObject);
 		}
 
 		private void AddLed(object sender, RoutedEventArgs e)
@@ -114,7 +114,7 @@ namespace OscGuiControl.Controls
 			led.IsEnabled = false;
 			led.IsHitTestVisible = false;
 			Element.Child = led;
-			parent.Tree.Add(led);
+			parent.OscTree.Add(led.OscObject);
 		}
 
 		private void AddKnob(object sender, RoutedEventArgs e)
@@ -123,7 +123,7 @@ namespace OscGuiControl.Controls
 			knob.IsEnabled = false;
 			knob.IsHitTestVisible = false;
 			Element.Child = knob;
-			parent.Tree.Add(knob);
+			parent.OscTree.Add(knob.OscObject);
 		}
 
 		private void AddTextBox(object sender, RoutedEventArgs e)
@@ -132,7 +132,7 @@ namespace OscGuiControl.Controls
 			textbox.IsEnabled = false;
 			textbox.IsHitTestVisible = false;
 			Element.Child = textbox;
-			parent.Tree.Add(textbox);
+			parent.OscTree.Add(textbox.OscObject);
 		}
 
 		private void AddSlider(object sender, RoutedEventArgs e)
@@ -142,7 +142,7 @@ namespace OscGuiControl.Controls
 			slider.IsEnabled = false;
 			slider.IsHitTestVisible = false;
 			Element.Child = slider;
-			parent.Tree.Add(slider);
+			parent.OscTree.Add(slider.OscObject);
 		}
 
 		private void AddButton(object sender, RoutedEventArgs e)
@@ -151,7 +151,7 @@ namespace OscGuiControl.Controls
 			button.IsEnabled = false;
 			button.IsHitTestVisible = false;
 			Element.Child = button;
-			parent.Tree.Add(button);
+			parent.OscTree.Add(button.OscObject);
 		}
 
 		private void AddLabel(object sender, RoutedEventArgs e)
@@ -160,7 +160,7 @@ namespace OscGuiControl.Controls
 			label.IsEnabled = false;
 			label.IsHitTestVisible = false;
 			Element.Child = label;
-			parent.Tree.Add(label);
+			parent.OscTree.Add(label.OscObject);
 		}
 
 		private void ClearItem(object sender, RoutedEventArgs e)
@@ -273,7 +273,7 @@ namespace OscGuiControl.Controls
 
 			if(Element.Child != null)
 			{
-				result["Child"] = (Element.Child as IOscObject).ToJSON();
+				result["Child"] = (Element.Child as IJsonInterface).ToJSON();
 			}
 
 			return result;
@@ -316,10 +316,10 @@ namespace OscGuiControl.Controls
 				}
 				if(Element.Child != null)
 				{
-					var child = (Element.Child as IOscObject);
-					parent.Tree.Remove(child.UID);
-					child.LoadJSON(childObj);
-					parent.Tree.Add(child);
+					var child = (Element.Child as OscTree.IOscObject);
+					parent.OscTree.Remove(child.OscObject);
+					(Element.Child as IJsonInterface).LoadJSON(childObj);
+					parent.OscTree.Add(child.OscObject);
 				}
 			}
 			SetEditMode(false);
@@ -331,7 +331,7 @@ namespace OscGuiControl.Controls
 		{
 			if(Element.Child != null)
 			{
-				parent.Tree.Remove((Element.Child as IOscObject).UID);
+				parent.OscTree.Remove((Element.Child as OscTree.IOscObject).OscObject);
 			}
 		}
 

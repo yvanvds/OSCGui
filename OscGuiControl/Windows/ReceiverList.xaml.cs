@@ -19,39 +19,44 @@ namespace OscGuiControl.Windows
 	/// </summary>
 	public partial class ReceiverList : Window
 	{
-		private OscAddressList list;
-		public OscAddressList List
+		private OscTree.Routes list;
+		public OscTree.Routes List
 		{
 			get => list;
 			set
 			{
 				list = value;
-				ContentList.ItemsSource = list.List;
+				ContentList.ItemsSource = list;
 			}
 		}
 
-		public ReceiverList()
+		private OscTree.Tree root;
+
+		public ReceiverList(OscTree.Tree root)
 		{
 			InitializeComponent();
 			RemoveButton.IsEnabled = false;
 			EditButton.IsEnabled = false;
+
+			this.root = root;
 		}
 
 		private void AddButton_Click(object sender, RoutedEventArgs e)
 		{
 			var window = new TreeWindow();
+			window.SetRoot(root);
 			window.ShowDialog();
-			if(window.CurrentAddress != null)
+			if(window.CurrentRoute != null)
 			{
-				list.List.Add(window.CurrentAddress);
+				list.Add(window.CurrentRoute);
 				ContentList.Items.Refresh();
 			}
 		}
 
 		private void RemoveButton_Click(object sender, RoutedEventArgs e)
 		{
-			OscAddress selected = ContentList.SelectedItem as OscAddress;
-			list.List.Remove(selected);
+			var selected = ContentList.SelectedItem as OscTree.Route;
+			list.Remove(selected);
 			ContentList.Items.Refresh();
 		}
 
@@ -62,17 +67,18 @@ namespace OscGuiControl.Windows
 
 		private void EditButton_Click(object sender, RoutedEventArgs e)
 		{
-			OscAddress selected = ContentList.SelectedItem as OscAddress;
+			var selected = ContentList.SelectedItem as OscTree.Route;
 			var window = new TreeWindow();
+			window.SetRoot(root);
 			window.SetRoute(selected);
 			window.ShowDialog();
-			if(window.CurrentAddress != null)
+			if(window.CurrentRoute != null)
 			{
-				int index = list.List.IndexOf(selected);
+				int index = list.IndexOf(selected);
 				if(index != -1)
 				{
-					list.List.RemoveAt(index);
-					list.List.Insert(index, window.CurrentAddress);
+					list.RemoveAt(index);
+					list.Insert(index, window.CurrentRoute);
 					ContentList.Items.Refresh();
 				}
 				

@@ -22,21 +22,30 @@ namespace WpfDemo
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		OscAddress lastAddress;
+		OscTree.Route lastRoute;
+		OscTree.Tree Root;
 
 		public MainWindow()
 		{
 			InitializeComponent();
+			Root = new OscTree.Tree(new OscTree.Address("Root", "Root"));
 
-			
+			Root.Add(Gui1.OscTree);
+			Root.Add(Gui2.OscTree);
+
+			GuiInspector.OscRoot = Root;
+
+			Gui1.SetInspector(GuiInspector);
+			Gui2.SetInspector(GuiInspector);
+			Gui1.SetGridSize(4, 4);
+			Gui2.SetGridSize(8, 8);
 		}
 
 
 		public override void EndInit()
 		{
 			base.EndInit();
-			Gui1.SetInspector(GuiInspector);
-			Gui2.SetInspector(GuiInspector);
+			
 		}
 
 		private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -54,9 +63,9 @@ namespace WpfDemo
 		private void ShowTreeButton_Click(object sender, RoutedEventArgs e)
 		{
 			var dialog = new Tree();
-			dialog.SetRoute(lastAddress);
+			dialog.SetRoute(lastRoute);
 			dialog.ShowDialog();
-			lastAddress = dialog.CurrentAddress;
+			lastRoute = dialog.CurrentAddress;
 		}
 	}
 }

@@ -45,35 +45,34 @@ namespace OscGuiControl
 			}
 		}
 
-		public OscAddressList Receivers
+		public OscTree.Routes Targets
 		{
 			set
 			{
-				if (value != null && value.List.Count > 0)
+				if (value != null && value.Count > 0)
 				{
-					JArray receivers = new JArray();
-					foreach (var receiver in value.List)
+					JArray targets = new JArray();
+					foreach (var target in value)
 					{
-						receivers.Add(new JArray(receiver.Route.ToArray()));
+						targets.Add(target.OriginalName);
 					}
-					obj["Receivers"] = receivers;
+					obj["Targets"] = targets;
 				}
 			}
 			get
 			{
-				if(obj.ContainsKey("Receivers"))
+				if(obj.ContainsKey("Targets"))
 				{
-					var receivers = obj["Receivers"] as JArray;
-					OscAddressList result = new OscAddressList();
-					foreach(var receiver in receivers)
+					var targets = obj["Targets"] as JArray;
+					var result = new OscTree.Routes();
+					foreach(var target in targets)
 					{
-						OscAddress address = new OscAddress();
-						address.SetJsonRoute(receiver as JArray);
-						result.List.Add(address);
+						OscTree.Route route = new OscTree.Route((string)target, OscTree.Route.RouteType.ID);
+						result.Add(route);
 					}
 					return result;
 				}
-				return new OscAddressList();
+				return new OscTree.Routes();
 			}
 		}
 

@@ -19,18 +19,15 @@ namespace OscGuiControl.Controls
 	/// <summary>
 	/// Interaction logic for TextBox.xaml
 	/// </summary>
-	public partial class TextBox : System.Windows.Controls.TextBox
-		, IOscObject, ISender
+	public partial class TextBox : System.Windows.Controls.TextBox, OscTree.IOscObject, IJsonInterface, IPropertyInterface
 	{
 		static private PropertyCollection properties = null;
 		public PropertyCollection Properties { get => properties; }
 
+		private OscTree.Object oscObject;
+		public OscTree.Object OscObject => oscObject;
+		public OscTree.Routes Targets => oscObject.Targets;
 
-		private OscObjectRoutes routes = new OscObjectRoutes();
-		public OscObjectRoutes Routes => routes;
-
-		private OscAddress address = new OscAddress();
-		public OscAddress Address => address;
 		static private int id = 1;
 
 		static TextBox()
@@ -38,7 +35,7 @@ namespace OscGuiControl.Controls
 			properties = new PropertyCollection();
 			properties.Add("ObjName", "Name");
 			properties.Add("FontSize");
-			properties.Add("Receivers", "Receivers", "Events");
+			properties.Add("Targets", "Targets", "Events");
 		}
 
 		public TextBox()
@@ -46,63 +43,54 @@ namespace OscGuiControl.Controls
 			InitializeComponent();
 			Style = FindResource("TextBoxStyle") as Style;
 
-			address.UID = OscTree.GenerateUID();
-			address.Name = "TextBox" + id++;
+			oscObject = new OscTree.Object(new OscTree.Address("TextBox" + id++));
 
-			routes.Add("Text", (args) =>
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Text", (args) =>
 			{
 				Text = OscParser.ToString(args);
-			});
+			}));
 
-			routes.Add("FontSize", (args) =>
+			oscObject.Endpoints.Add(new OscTree.Endpoint("FontSize", (args) =>
 			{
 				FontSize = OscParser.ToInt(args);
-			});
+			}));
 		}
 
 		public string ObjName
 		{
-			get => address.Name;
-			set => address.Name = value;
+			get => OscObject.Address.Name;
+			set => OscObject.Address.Name = value;
 		}
 
 		public new string Name => ObjName;
 
-		public string UID
+		public string ID
 		{
-			get => address.UID;
+			get => OscObject.Address.ID;
 		}
-
-		public OscAddressList Receivers { get; set; } = new OscAddressList();
 
 		protected override void OnTextChanged(TextChangedEventArgs e)
 		{
-			if (Receivers != null)
-			{
-				foreach (var receiver in Receivers.List)
-				{
-					OscSender.Send(receiver, Text);
-				}
-			}
+			OscObject.Send(Text);
 		}
 
 		public JObject ToJSON()
 		{
-			OscJsonObject result = new OscJsonObject("TextBox", UID, Name);
+			OscJsonObject result = new OscJsonObject("TextBox", ID, Name);
 			result.Content = Text;
 			result.FontSize = FontSize;
-			result.Receivers = Receivers;
+			result.Targets = OscObject.Targets;
 			return result.Get();
 		}
 
 		public bool LoadJSON(JObject obj)
 		{
 			OscJsonObject json = new OscJsonObject(obj);
-			Address.UID = json.UID;
+			OscObject.Address.ID = json.UID;
 			ObjName = json.Name;
 			Text = json.Content as string;
 			FontSize = json.FontSize;
-			Receivers = json.Receivers;
+			OscObject.Targets = json.Targets;
 			return true;
 		}
 	}

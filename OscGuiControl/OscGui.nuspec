@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>1.0.4</version>
+    <title>OscGui</title>
+    <authors>yvan vander sanden</authors>
+    <owners>Mute</owners>
+    <projectUrl>https://github.com/yvanvds/OSCGui</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A Gui Display and Design Module with OSC support</description>
+    <releaseNotes>Initial Release</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>osc gui</tags>
+  </metadata>
+</package>

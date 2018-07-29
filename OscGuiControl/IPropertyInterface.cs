@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OscGuiControl.Controls.Parts
+namespace OscGuiControl
 {
-	public interface IMessageReceiver
+	interface IPropertyInterface
 	{
-		void SetMessage(string target, object[] arguments);
+		PropertyCollection Properties { get; }
 	}
 }

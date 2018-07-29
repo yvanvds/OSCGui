@@ -8,16 +8,14 @@ using System.Windows.Media;
 
 namespace OscGuiControl.Controls
 {
-	public class MTPad : yGuiWPF.Controls.MTPad, IOscObject, ISender
+	public class MTPad : yGuiWPF.Controls.MTPad, OscTree.IOscObject, IJsonInterface, IPropertyInterface
 	{
 		static private PropertyCollection properties = null;
 		public PropertyCollection Properties { get => properties; }
 
-		private OscObjectRoutes routes = new OscObjectRoutes();
-		public OscObjectRoutes Routes => routes;
-
-		private OscAddress address = new OscAddress();
-		public OscAddress Address => address;
+		private OscTree.Object oscObject;
+		public OscTree.Object OscObject => oscObject;
+		public OscTree.Routes Targets => oscObject.Targets;
 
 		static private int id = 1;
 
@@ -27,26 +25,25 @@ namespace OscGuiControl.Controls
 			properties.Add("ObjName", "Name");
 			properties.Add("Color", "Color", "Appearance");
 			properties.Add("Background", "Background", "Appearance");
-			properties.Add("Receivers", "Receivers", "Events");
+			properties.Add("Targets", "Targets", "Events");
 		}
 
 		public MTPad()
 		{
-			address.UID = OscTree.GenerateUID();
-			address.Name = "Slider" + id++;
+			oscObject = new OscTree.Object(new OscTree.Address("MTPad" + id++));
 		}
 
 		public string ObjName
 		{
-			get => address.Name;
-			set => address.Name = value;
+			get => OscObject.Address.Name;
+			set => OscObject.Address.Name = value;
 		}
 
 		public new string Name => ObjName;
 
-		public string UID
+		public string ID
 		{
-			get => address.UID;
+			get => OscObject.Address.ID;
 		}
 
 		public Color Color
@@ -61,25 +58,23 @@ namespace OscGuiControl.Controls
 			set => BackGround = new SolidColorBrush(value);
 		}
 
-		public OscAddressList Receivers { get; set; } = new OscAddressList();
-
 		public JObject ToJSON()
 		{
-			OscJsonObject result = new OscJsonObject("MTPad", UID, Name);
+			OscJsonObject result = new OscJsonObject("MTPad", ID, Name);
 			result.Color = ForeGround.Color;
 			result.Background = BackGround.Color;
-			result.Receivers = Receivers;
+			result.Targets = OscObject.Targets;
 			return result.Get();
 		}
 
 		public bool LoadJSON(JObject obj)
 		{
 			OscJsonObject json = new OscJsonObject(obj);
-			Address.UID = json.UID;
+			OscObject.Address.ID = json.UID;
 			ObjName = json.Name;
 			ForeGround = new SolidColorBrush(json.Color);
 			BackGround = new SolidColorBrush(json.Background);
-			Receivers = json.Receivers;
+			OscObject.Targets = json.Targets;
 			return true;
 		}
 	}

@@ -9,16 +9,14 @@ using yGuiWPF;
 
 namespace OscGuiControl.Controls
 {
-	public class Button : yGuiWPF.Controls.Button, IOscObject, ISender
+	public class Button : yGuiWPF.Controls.Button, OscTree.IOscObject, IJsonInterface, IPropertyInterface
 	{
 		static private PropertyCollection properties = null;
 		public PropertyCollection Properties { get => properties; }
 
-		private OscObjectRoutes routes = new OscObjectRoutes();
-		public OscObjectRoutes Routes => routes;
-
-		private OscAddress address = new OscAddress();
-		public OscAddress Address => address;
+		private OscTree.Object oscObject;
+		public OscTree.Object OscObject => oscObject;
+		public OscTree.Routes Targets => oscObject.Targets;
 
 		static private int id = 1;
 
@@ -30,24 +28,23 @@ namespace OscGuiControl.Controls
 			properties.Add("TextScale");
 			properties.Add("Color", "Color", "Appearance");
 			properties.Add("Background", "Background", "Appearance");
-			properties.Add("Receivers", "Receivers", "Events");
+			properties.Add("Targets", "Targets", "Events");
 			properties.Add("IsToggle", "Is Toggle", "Events");
 		}
 
 		public Button()
 		{
-			address.UID = OscTree.GenerateUID();
-			address.Name = "Button" + id++;
+			oscObject = new OscTree.Object(new OscTree.Address("Button" + id++));
 
-			routes.Add("Text", (args) =>
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Text", (args) =>
 			{
 				Text = OscParser.ToString(args);
-			});
+			}));
 
-			routes.Add("TextScale", (args) =>
+			oscObject.Endpoints.Add(new OscTree.Endpoint("TextScale", (args) =>
 			{
 				TextScale = (TextScales)OscParser.ToInt(args);
-			});
+			}));
 
 			ForeGround = new SolidColorBrush(System.Windows.Media.Colors.Green);
 			Text = "BUTTON";
@@ -57,32 +54,27 @@ namespace OscGuiControl.Controls
 
 		private void OnCick(object sender, System.Windows.RoutedEventArgs e)
 		{
-			if (Receivers != null)
+
+			if(IsToggle)
 			{
-				foreach (var receiver in Receivers.List)
-				{
-					if(IsToggle)
-					{
-						OscSender.Send(receiver, Toggled);
-					} else
-					{
-						OscSender.Send(receiver);
-					}
-				}
+				OscObject.Send(Toggled);
+			} else
+			{
+				OscObject.Send(null);
 			}
 		}
 
 		public string ObjName
 		{
-			get => address.Name;
-			set => address.Name = value;
+			get => OscObject.Address.Name;
+			set => OscObject.Address.Name = value;
 		}
 
 		public new string Name => ObjName;
 
-		public string UID
+		public string ID
 		{
-			get => address.UID;
+			get => OscObject.Address.ID;
 		}
 
 		public Color Color
@@ -97,22 +89,14 @@ namespace OscGuiControl.Controls
 			set => BackGround = new SolidColorBrush(value);
 		}
 
-		private OscAddressList receivers = new OscAddressList();
-		public OscAddressList Receivers
-		{
-			get => receivers;
-			set => receivers = value;
-		}
-
-
 		public JObject ToJSON()
 		{
-			OscJsonObject result = new OscJsonObject("Button", UID, Name);
+			OscJsonObject result = new OscJsonObject("Button", ID, Name);
 			result.Content = Text;
 			result.Color = ForeGround.Color;
 			result.Background = BackGround.Color;
 			result.TextScale = TextScale;
-			result.Receivers = Receivers;
+			result.Targets = OscObject.Targets;
 			result.IsToggle = IsToggle;
 			return result.Get();
 		}
@@ -120,13 +104,13 @@ namespace OscGuiControl.Controls
 		public bool LoadJSON(JObject obj)
 		{
 			OscJsonObject json = new OscJsonObject(obj);
-			Address.UID = json.UID;
+			OscObject.Address.ID = json.UID;
 			ObjName = json.Name;
 			Text = json.Content as string;
 			ForeGround = new SolidColorBrush(json.Color);
 			BackGround = new SolidColorBrush(json.Background);
 			TextScale = json.TextScale;
-			Receivers = json.Receivers;
+			OscObject.Targets = json.Targets;
 			IsToggle = json.IsToggle;
 			return true;
 		}

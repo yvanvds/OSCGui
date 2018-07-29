@@ -1,180 +1,147 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
+using OscGuiControl;
 using OscGuiControl.Controls;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
 namespace OscGuiControl
 {
-	public class OscGUI : System.Windows.Controls.Control
+	/// <summary>
+	/// Interaction logic for OscGui.xaml
+	/// </summary>
+	public partial class OscGUI : UserControl
 	{
-		private CheckBox editCheckbox;
-		private System.Windows.Controls.Button mergeButton;
-		private System.Windows.Controls.Button splitVButton;
-		private System.Windows.Controls.Button splitHButton;
-		//private GridManager gridManager;
-		private System.Windows.Controls.Label nameLabel;
-
-		private Grid uiGrid;
-
 		private BaseControl[,] shadowGrid;
 
 		static private PropertyCollection properties = null;
 		public PropertyCollection Properties { get => properties; }
 
-		private OscObjectRoutes routes = new OscObjectRoutes();
-		public OscObjectRoutes Routes => routes;
-
-		private OscAddress address = new OscAddress();
-		public OscAddress Address => address;
-
-		private OscTree tree = new OscTree();
-		public OscTree Tree => tree;
+		private OscTree.Tree tree;
+		public OscTree.Tree OscTree => tree;
 
 		static private int id = 1;
 
-		#region Constructors
 		static OscGUI()
 		{
-			DefaultStyleKeyProperty.OverrideMetadata(typeof(OscGUI), new FrameworkPropertyMetadata(typeof(OscGUI)));
-
 			properties = new PropertyCollection();
 			properties.Add("Name");
 		}
 
 		public OscGUI()
 		{
+			InitializeComponent();
+
 			Name = "Gui" + id++;
-			Tree.UID = OscTree.GenerateUID();
-			OscTree.Root.Add(Tree);
-		}
+			tree = new OscTree.Tree(new OscTree.Address(Name));
 
-		public override void OnApplyTemplate()
-		{
-			uiGrid = GetTemplateChild<Grid>("BaseGrid");
-			editCheckbox = GetTemplateChild<System.Windows.Controls.CheckBox>("EditCheckbox");
-			mergeButton = GetTemplateChild<System.Windows.Controls.Button>("MergeButton");
-			splitHButton = GetTemplateChild<System.Windows.Controls.Button>("SplitHButton");
-			splitVButton = GetTemplateChild<System.Windows.Controls.Button>("SplitVButton");
-
-			nameLabel = GetTemplateChild<System.Windows.Controls.Label>("NameLabel");
-			nameLabel.Content = Name;
-			nameLabel.MouseDoubleClick += (s, e) =>
+			NameLabel.Content = Name;
+			/*NameLabel.MouseDoubleClick += (s, e) =>
 			{
 				if (!EditMode) return;
 				inspector?.Inspect(this as IOscObject);
-			};
+			};*/
+
 			Binding nameBinding = new Binding();
 			nameBinding.Source = this;
 			nameBinding.Path = new PropertyPath("Name");
 			nameBinding.Mode = BindingMode.OneWay;
 			nameBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-			BindingOperations.SetBinding(nameLabel, System.Windows.Controls.Label.ContentProperty, nameBinding);
+			BindingOperations.SetBinding(NameLabel, System.Windows.Controls.Label.ContentProperty, nameBinding);
 
-			reset();
-
-			for (int r = 0; r < Rows; r++)
-			{
-				for (int c = 0; c < Columns; c++)
-				{
-					Add(new BaseControl(this), r, c);
-				}
-			}
-
-			editCheckbox.Checked += (s, e) =>
+			EditCheckbox.Checked += (s, e) =>
 			{
 				EditMode = true;
 			};
-
-			editCheckbox.Unchecked += (s, e) =>
+			EditCheckbox.Unchecked += (s, e) =>
 			{
 				EditMode = false;
 			};
 
-			mergeButton.Click += (s, e) =>
+			MergeButton.Click += (s, e) =>
 			{
 				MergeSelected();
 			};
 
-			splitHButton.Click += (s, e) =>
+			SplitHButton.Click += (s, e) =>
 			{
 				splitHorizontal();
 			};
 
-			splitVButton.Click += (s, e) =>
+			SplitVButton.Click += (s, e) =>
 			{
 				splitVertical();
 			};
 
-			uiGrid.MouseLeave += (s, e) =>
+			UIGrid.MouseLeave += (s, e) =>
 			{
 				EndDrag(null);
 			};
 
-			uiGrid.MouseLeftButtonUp += (s, e) =>
+			UIGrid.MouseLeftButtonUp += (s, e) =>
 			{
 				EndDrag(null);
 			};
 
-			MouseDoubleClick += (s, e) =>
+			/*MouseDoubleClick += (s, e) =>
 			{
 				inspector?.Inspect(this as IOscObject);
-			};
+			};*/
 		}
 
-		~OscGUI()
+		int rows;
+		int columns;
+		public void SetGridSize(int rows, int columns)
 		{
-			OscTree.Root.Remove(Tree.UID);
+			this.rows = rows;
+			this.columns = columns;
+
+			reset();
+
+			for (int r = 0; r < rows; r++)
+			{
+				for (int c = 0; c < columns; c++)
+				{
+					Add(new BaseControl(this), r, c);
+				}
+			}
 		}
-		#endregion Constructors
 
-		#region Properties
-
-		public int Rows
+		public new string Name
 		{
-			get => (int)GetValue(RowsProperty);
-			set => SetValue(RowsProperty, value);
-		}
-		public static readonly DependencyProperty RowsProperty =
-			DependencyProperty.Register(nameof(Rows), typeof(int), typeof(OscGUI), new PropertyMetadata(8));
-
-		public int Columns
-		{
-			get => (int)GetValue(ColumnsProperty);
-			set => SetValue(ColumnsProperty, value);
-		}
-		public static readonly DependencyProperty ColumnsProperty =
-			DependencyProperty.Register(nameof(Columns), typeof(int), typeof(OscGUI), new PropertyMetadata(8));
-
-		public new string Name {
 			get => base.Name;
 			set
 			{
 				base.Name = value;
-				Tree.Name = value;
+				if (OscTree != null) OscTree.Address.Name = value;
 			}
 		}
-
-  	#endregion Properties
 
 		#region IO
 
 		public string ToJSON()
 		{
 			JObject obj = new JObject();
-			obj["Rows"] = Rows;
-			obj["Columns"] = Columns;
+			obj["Rows"] = rows;
+			obj["Columns"] = columns;
 			obj["Name"] = Name;
-			obj["Uid"] = Tree.UID;
+			obj["Uid"] = OscTree.Address.ID;
 
 			JArray array = new JArray();
 			foreach (var elm in shadowGrid)
 			{
-				if(elm != null)
+				if (elm != null)
 				{
 					array.Add(elm.ToJSON());
 				}
@@ -187,18 +154,17 @@ namespace OscGuiControl
 		public bool LoadJSON(string content)
 		{
 			JObject obj = JObject.Parse(content);
-			Rows = (int)obj["Rows"];
-			Columns = (int)obj["Columns"];
+			rows = (int)obj["Rows"];
+			columns = (int)obj["Columns"];
 			Name = (string)obj["Name"];
 
 			reset();
 
-			OscTree.Root.Remove(Tree.UID);
-			Tree.UID = (string)obj["Uid"];
-			OscTree.Root.Add(Tree);
+			OscTree.Address.Name = Name;
+			OscTree.Address.ID = (string)obj["Uid"];
 
 			JArray objects = obj["objects"] as JArray;
-			foreach(var elm in objects)
+			foreach (var elm in objects)
 			{
 				int x = (int)elm["PosX"];
 				int y = (int)elm["PosY"];
@@ -212,46 +178,41 @@ namespace OscGuiControl
 
 		private void reset()
 		{
-			if(shadowGrid != null)
+			if (shadowGrid != null)
 			{
-				foreach(var elm in shadowGrid)
+				foreach (var elm in shadowGrid)
 				{
-					if(elm != null)
+					if (elm != null)
 					{
 						elm.RemoveCurrentElement();
 					}
 				}
 			}
-			shadowGrid = new BaseControl[Columns, Rows];
+			shadowGrid = new BaseControl[columns, rows];
 
-			uiGrid.ColumnDefinitions.Clear();
-			uiGrid.RowDefinitions.Clear();
-			uiGrid.Children.Clear();
+			UIGrid.ColumnDefinitions.Clear();
+			UIGrid.RowDefinitions.Clear();
+			UIGrid.Children.Clear();
 
-			for (int i = 0; i < Rows; i++)
+			for (int i = 0; i < rows; i++)
 			{
-				uiGrid.RowDefinitions.Add(new RowDefinition());
+				UIGrid.RowDefinitions.Add(new RowDefinition());
 			}
 
-			for (int i = 0; i < Columns; i++)
+			for (int i = 0; i < columns; i++)
 			{
-				uiGrid.ColumnDefinitions.Add(new ColumnDefinition());
+				UIGrid.ColumnDefinitions.Add(new ColumnDefinition());
 			}
-
-			
 		}
-
 		#endregion IO
 
 		#region Dragging
 		private BaseControl draggingObj = null;
-		private bool dragInProgress = false;
 
 		private void startDrag(BaseControl obj)
 		{
 			draggingObj = obj;
 			Mouse.OverrideCursor = Cursors.Hand;
-			dragInProgress = true;
 		}
 
 		public void EndDrag(BaseControl target)
@@ -259,13 +220,11 @@ namespace OscGuiControl
 			Mouse.OverrideCursor = null;
 			if (draggingObj == null)
 			{
-				dragInProgress = false;
 				return;
 			}
 			if (target == null)
 			{
 				draggingObj = null;
-				dragInProgress = false;
 				return;
 			}
 
@@ -282,7 +241,6 @@ namespace OscGuiControl
 			shadowGrid[draggingObj.Pos.X, draggingObj.Pos.Y] = draggingObj;
 
 			draggingObj = null;
-			dragInProgress = false;
 		}
 		#endregion
 
@@ -310,17 +268,17 @@ namespace OscGuiControl
 			// set left upper element aside and remove the rest
 			BaseControl keepElm = null;
 			var p = new System.Drawing.Point(0, 0);
-			for (; p.X < Columns; p.X++)
+			for (; p.X < columns; p.X++)
 			{
 				p.Y = 0;
-				for (; p.Y < Rows; p.Y++)
+				for (; p.Y < rows; p.Y++)
 				{
 					if (p.Equals(min)) keepElm = shadowGrid[p.X, p.Y];
 					else if (p.X >= min.X && p.X <= max.X && p.Y >= min.Y && p.Y <= max.Y)
 					{
 						if (shadowGrid[p.X, p.Y] != null)
 						{
-							uiGrid.Children.Remove(shadowGrid[p.X, p.Y]);
+							UIGrid.Children.Remove(shadowGrid[p.X, p.Y]);
 							shadowGrid[p.X, p.Y] = null;
 						}
 					}
@@ -338,9 +296,9 @@ namespace OscGuiControl
 
 			// see if any null elements have to be replaced
 			p = new System.Drawing.Point(0, 0);
-			for (; p.X < Columns; p.X++)
+			for (; p.X < columns; p.X++)
 			{
-				for (; p.Y < Rows; p.Y++)
+				for (; p.Y < rows; p.Y++)
 				{
 					if (!IsTaken(p))
 					{
@@ -357,26 +315,30 @@ namespace OscGuiControl
 		#region Splitter
 		private void SetSplitMode()
 		{
-			if(selectedObj == null)
+			if (selectedObj == null)
 			{
-				splitHButton.IsEnabled = false;
-				splitVButton.IsEnabled = false;
-			} else if (selectedObj.Rows > 1 && selectedObj.Columns > 1)
+				SplitHButton.IsEnabled = false;
+				SplitVButton.IsEnabled = false;
+			}
+			else if (selectedObj.Rows > 1 && selectedObj.Columns > 1)
 			{
-				splitHButton.IsEnabled = true;
-				splitVButton.IsEnabled = true;
-			} else if (selectedObj.Rows > 1)
+				SplitHButton.IsEnabled = true;
+				SplitVButton.IsEnabled = true;
+			}
+			else if (selectedObj.Rows > 1)
 			{
-				splitHButton.IsEnabled = false;
-				splitVButton.IsEnabled = true;
-			} else if (selectedObj.Columns > 1)
+				SplitHButton.IsEnabled = false;
+				SplitVButton.IsEnabled = true;
+			}
+			else if (selectedObj.Columns > 1)
 			{
-				splitHButton.IsEnabled = true;
-				splitVButton.IsEnabled = false;
-			} else
+				SplitHButton.IsEnabled = true;
+				SplitVButton.IsEnabled = false;
+			}
+			else
 			{
-				splitHButton.IsEnabled = false;
-				splitVButton.IsEnabled = false;
+				SplitHButton.IsEnabled = false;
+				SplitVButton.IsEnabled = false;
 			}
 		}
 
@@ -425,7 +387,7 @@ namespace OscGuiControl
 			selectedObj = null;
 			SetSplitMode();
 		}
-		#endregion Splitter
+		#endregion
 
 		#region Selector
 		private BaseControl selectedObj = null;
@@ -543,7 +505,12 @@ namespace OscGuiControl
 		public bool EditMode
 		{
 			get => (bool)GetValue(EditModeProperty);
-			set {
+			set
+			{
+				if ((bool)GetValue(EditModeProperty) == true && value == false)
+				{
+					GenerateValueChangeEvent();
+				}
 				SetValue(EditModeProperty, value);
 				foreach (var elm in shadowGrid)
 				{
@@ -555,6 +522,27 @@ namespace OscGuiControl
 			DependencyProperty.Register(nameof(EditMode), typeof(bool), typeof(OscGUI), new PropertyMetadata(false));
 		#endregion EditMode
 
+		#region ChangeEvent
+		public static RoutedEvent ValueChangedEvent =
+			EventManager.RegisterRoutedEvent(
+				"Changed",
+				RoutingStrategy.Bubble,
+				typeof(RoutedEventHandler),
+				typeof(OscGUI));
+
+		public event RoutedEventHandler Changed
+		{
+			add { AddHandler(ValueChangedEvent, value); }
+			remove { RemoveHandler(ValueChangedEvent, value); }
+		}
+
+		private void GenerateValueChangeEvent()
+		{
+			RoutedEventArgs args = new RoutedEventArgs(ValueChangedEvent, this);
+			RaiseEvent(args);
+		}
+		#endregion ChangeEvent
+
 		#region Inspector
 		private OscInspectorGui inspector = null;
 		public void SetInspector(OscInspectorGui inspector)
@@ -564,7 +552,7 @@ namespace OscGuiControl
 
 		private void Inspect(object obj)
 		{
-			inspector?.Inspect(obj as IOscObject);
+			inspector?.Inspect(obj as OscTree.IOscObject);
 		}
 
 		#endregion Inspector
@@ -583,7 +571,7 @@ namespace OscGuiControl
 			shadowGrid[column, row] = obj;
 			obj.Rows = obj.Columns = 1;
 			obj.Pos = new System.Drawing.Point(column, row);
-			uiGrid.Children.Add(obj);
+			UIGrid.Children.Add(obj);
 		}
 
 		public bool IsTaken(System.Drawing.Point p)

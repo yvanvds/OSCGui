@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using OscTree;
 
 namespace OscGuiControl
 {
@@ -20,42 +9,38 @@ namespace OscGuiControl
 	/// </summary>
 	public partial class OscInspectorGui : UserControl
 	{
-		ISender currentObj;
-		OscAddressList currentReceiver;
-
 		public OscInspectorGui()
 		{
 			InitializeComponent();
 		}
 
-		public void Inspect(IOscObject ctrl)
+		public OscTree.Tree OscRoot { get; set; } = null;
+
+		public void Inspect(object obj)
 		{
-			if (ctrl != null)
+			if (obj != null)
 			{ 
-				PropertyGrid.PropertyDefinitions = ctrl.Properties.Collection;
-				if(ctrl is ISender)
+				if(obj is IPropertyInterface)
 				{
-					currentObj = ctrl as ISender;
-					currentReceiver = currentObj.Receivers;
+					PropertyGrid.PropertyDefinitions = (obj as IPropertyInterface).Properties.Collection;
 				}
-				
 			}
-			PropertyGrid.SelectedObject = ctrl;
-			
+			PropertyGrid.SelectedObject = obj;
 		}
 
 		private void ReceiversButton_Click(object sender, RoutedEventArgs e)
 		{
-			if(PropertyGrid.SelectedObject is ISender)
+			if (OscRoot == null) return;
+
+			if(PropertyGrid.SelectedObject is OscTree.IOscObject)
 			{
-				ISender ctrl = PropertyGrid.SelectedObject as ISender;
-				var dialog = new Windows.ReceiverList();
-				dialog.List = ctrl.Receivers;
+				var ctrl = PropertyGrid.SelectedObject as OscTree.IOscObject;
+				var dialog = new Windows.ReceiverList(OscRoot);
+				ctrl.OscObject.Targets.UpdateScreenNames(OscRoot);
+				dialog.List = ctrl.OscObject.Targets;
 				dialog.ShowDialog();
-				ctrl.Receivers = dialog.List;
+				ctrl.OscObject.Targets = dialog.List;
 			}
-			
-			
 		}
 	}
 }
