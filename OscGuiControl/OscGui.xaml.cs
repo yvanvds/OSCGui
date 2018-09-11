@@ -129,6 +129,20 @@ namespace OscGuiControl
 		}
 
 		#region IO
+		private bool guiChanged = false;
+		public bool NeedsSaving()
+		{
+			if (guiChanged) return true;
+			foreach (var elm in shadowGrid)
+			{
+				if (elm != null && elm.NeedsSaving())
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 
 		public string ToJSON()
 		{
@@ -147,6 +161,8 @@ namespace OscGuiControl
 				}
 			}
 			obj["objects"] = array;
+
+			guiChanged = false;
 
 			return obj.ToString();
 		}
@@ -173,6 +189,7 @@ namespace OscGuiControl
 				Add(ctrl, y, x);
 				ctrl.LoadJSON(elm as JObject);
 			}
+			guiChanged = false;
 			return true;
 		}
 
@@ -241,6 +258,7 @@ namespace OscGuiControl
 			shadowGrid[draggingObj.Pos.X, draggingObj.Pos.Y] = draggingObj;
 
 			draggingObj = null;
+			guiChanged = true;
 		}
 		#endregion
 
@@ -308,6 +326,7 @@ namespace OscGuiControl
 					}
 				}
 			}
+			guiChanged = true;
 		}
 
 		#endregion Merger
@@ -363,6 +382,7 @@ namespace OscGuiControl
 			selectedObj.Selected = false;
 			selectedObj = null;
 			SetSplitMode();
+			guiChanged = true;
 		}
 
 		private void splitVertical()
@@ -386,6 +406,7 @@ namespace OscGuiControl
 			selectedObj.Selected = false;
 			selectedObj = null;
 			SetSplitMode();
+			guiChanged = true;
 		}
 		#endregion
 
@@ -507,10 +528,10 @@ namespace OscGuiControl
 			get => (bool)GetValue(EditModeProperty);
 			set
 			{
-				if ((bool)GetValue(EditModeProperty) == true && value == false)
-				{
-					GenerateValueChangeEvent();
-				}
+				//if ((bool)GetValue(EditModeProperty) == true && value == false)
+				//{
+				//	GenerateValueChangeEvent();
+				//}
 				SetValue(EditModeProperty, value);
 				foreach (var elm in shadowGrid)
 				{
@@ -522,6 +543,7 @@ namespace OscGuiControl
 			DependencyProperty.Register(nameof(EditMode), typeof(bool), typeof(OscGUI), new PropertyMetadata(false));
 		#endregion EditMode
 
+		/*
 		#region ChangeEvent
 		public static RoutedEvent ValueChangedEvent =
 			EventManager.RegisterRoutedEvent(
@@ -542,7 +564,7 @@ namespace OscGuiControl
 			RaiseEvent(args);
 		}
 		#endregion ChangeEvent
-
+	*/
 		#region Inspector
 		private OscInspectorGui inspector = null;
 		public void SetInspector(OscInspectorGui inspector)
@@ -558,13 +580,14 @@ namespace OscGuiControl
 		#endregion Inspector
 
 		#region Utils
-		T GetTemplateChild<T>(string name) where T : DependencyObject
+		/*T GetTemplateChild<T>(string name) where T : DependencyObject
 		{
 			var child = GetTemplateChild(name) as T;
 			if (child == null)
 				throw new NullReferenceException(name);
 			return child;
-		}
+		}*/
+
 
 		void Add(BaseControl obj, int row, int column)
 		{

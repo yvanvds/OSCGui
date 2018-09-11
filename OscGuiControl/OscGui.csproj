@@ -39,6 +39,9 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="OscTree, Version=1.0.21.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\OscTree.1.0.21\lib\netstandard2.0\OscTree.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="shortid, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -91,7 +94,7 @@
       <HintPath>packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="yGuiWPF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\yGuiWPF.1.0.8\lib\net461\yGuiWPF.dll</HintPath>
+      <HintPath>packages\yGuiWPF.1.0.9\lib\net461\yGuiWPF.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +102,7 @@
       <DependentUpon>BaseControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Button.cs" />
+    <Compile Include="Controls\IContextMenu.cs" />
     <Compile Include="Controls\Knob.cs" />
     <Compile Include="Controls\Label.xaml.cs">
       <DependentUpon>Label.xaml</DependentUpon>
@@ -111,6 +115,7 @@
     </Compile>
     <Compile Include="Controls\XYPad.cs" />
     <Compile Include="IJsonInterface.cs" />
+    <Compile Include="IOscRoutePicker.cs" />
     <Compile Include="IPropertyInterface.cs" />
     <Compile Include="OscGui.xaml.cs">
       <DependentUpon>OscGui.xaml</DependentUpon>
@@ -182,12 +187,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\OscTree\OscTree\OscTree.csproj">
-      <Project>{e0982b79-3e9d-44f0-a38a-00dff9181acd}</Project>
-      <Name>OscTree</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

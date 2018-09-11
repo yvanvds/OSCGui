@@ -1,0 +1,209 @@
+{
+  "Rows": 8,
+  "Columns": 4,
+  "Name": "StartScreen",
+  "Uid": "G5heq-oTI7g",
+  "objects": [
+    {
+      "PosX": 0,
+      "PosY": 0,
+      "Rows": 2,
+      "Columns": 2,
+      "Child": {
+        "Type": "Knob",
+        "UID": "sz9jdjEd",
+        "Name": "Knob5",
+        "Minimum": 0.0,
+        "Maximum": 100.0,
+        "Color": "#FF7FFF00",
+        "Content": "test",
+        "ShowValue": true,
+        "Targets": {
+          "/Root/Client/G5heq-oTI7g/hqazUhEev/Text": {
+            "1": "LocalClient"
+          },
+          "/Root/Server/gUkDl9eQ/X6w_bhm_/Text": {}
+        }
+      }
+    },
+    {
+      "PosX": 0,
+      "PosY": 2,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 0,
+      "PosY": 3,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 0,
+      "PosY": 4,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 0,
+      "PosY": 5,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 0,
+      "PosY": 6,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 0,
+      "PosY": 7,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 1,
+      "PosY": 2,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 1,
+      "PosY": 3,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 1,
+      "PosY": 4,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 1,
+      "PosY": 5,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 1,
+      "PosY": 6,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 1,
+      "PosY": 7,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 2,
+      "PosY": 0,
+      "Rows": 1,
+      "Columns": 1,
+      "Child": {
+        "Type": "Label",
+        "UID": "hqazUhEev",
+        "Name": "Label3",
+        "Content": "78,5",
+        "Color": "#FFFFFFFF",
+        "FontSize": 12.0,
+        "FontWeight": 400,
+        "FontStyle": "Normal",
+        "HAlign": "Left"
+      }
+    },
+    {
+      "PosX": 2,
+      "PosY": 1,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 2,
+      "PosY": 2,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 2,
+      "PosY": 3,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 2,
+      "PosY": 4,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 2,
+      "PosY": 5,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 2,
+      "PosY": 6,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 2,
+      "PosY": 7,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 3,
+      "PosY": 0,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 3,
+      "PosY": 1,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 3,
+      "PosY": 2,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 3,
+      "PosY": 3,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 3,
+      "PosY": 4,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 3,
+      "PosY": 5,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 3,
+      "PosY": 6,
+      "Rows": 1,
+      "Columns": 1
+    },
+    {
+      "PosX": 3,
+      "PosY": 7,
+      "Rows": 1,
+      "Columns": 1
+    }
+  ]
+}

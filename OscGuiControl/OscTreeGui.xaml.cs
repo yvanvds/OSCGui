@@ -61,13 +61,13 @@ namespace OscGuiControl
 			if (route == null) return;
 			if (route.Steps.Count == 0) return;
 			int level = 0;
-			foreach(var id in route.Steps)
+			foreach (var id in route.Steps)
 			{
-				foreach(var elm in panels[level].Children)
+				foreach (var elm in panels[level].Children)
 				{
 					var button = elm as Button;
 					ButtonType type = (ButtonType)button.Tag;
-					if(type == ButtonType.Tree) 
+					if (type == ButtonType.Tree)
 					{
 						var tree = button.DataContext as OscTree.Tree;
 						if (tree.Address.ID.Equals(route.Steps[level + 1]))
@@ -78,10 +78,11 @@ namespace OscGuiControl
 							deselect(level);
 							break;
 						}
-					} else if (type == ButtonType.Object)
+					}
+					else if (type == ButtonType.Object)
 					{
 						var obj = button.DataContext as OscTree.IOscNode;
-						if(obj.Address.ID.Equals(route.Steps[level + 1]))
+						if (obj.Address.ID.Equals(route.Steps[level + 1]))
 						{
 							level++;
 							select(button);
@@ -89,16 +90,20 @@ namespace OscGuiControl
 							deselect(level);
 							break;
 						}
-					} else if (type == ButtonType.Endpoint)
+					}
+					else if (type == ButtonType.Endpoint)
 					{
-						if((button.Content as string).Equals(route.Steps[level + 1]))
+						if ((button.Content as string).Equals(route.Steps[level + 1]))
 						{
 							select(button);
 							break;
-						} 
+						}
 					}
 				}
 			}
+
+			SelectedRoute = route;
+			OnRouteChanged();
 		}
 
 		private void addPanel(OscTree.Tree tree)
@@ -108,7 +113,7 @@ namespace OscGuiControl
 			LevelGrid.ColumnDefinitions.Add(column);
 
 			var panel = new StackPanel();
-			
+
 			panel.Orientation = Orientation.Vertical;
 			Grid.SetColumn(panel, panels.Count);
 			Grid.SetRow(panel, 0);
@@ -117,20 +122,25 @@ namespace OscGuiControl
 
 			foreach (var elm in tree.Children.List.Values)
 			{
+				if (elm is OscTree.Tree && (elm as OscTree.Tree).IgnoreInGui == true)
+				{
+					continue;
+				}
 				var button = new Button();
 				button.Content = elm.Address.Name;
 				button.DataContext = elm;
-				if(elm is OscTree.Tree)
+				if (elm is OscTree.Tree)
 				{
 					button.Tag = ButtonType.Tree;
 					button.BorderBrush = new SolidColorBrush(Colors.Green);
 					button.Click += OnTreeClick;
-				} else
+				}
+				else
 				{
 					button.Tag = ButtonType.Object;
 					button.BorderBrush = new SolidColorBrush(Colors.YellowGreen);
 					button.Click += OnObjectClick;
-				}				
+				}
 				panel.Children.Add(button);
 			}
 
@@ -160,7 +170,7 @@ namespace OscGuiControl
 			LevelGrid.Children.Add(panel);
 			panels.Add(panel);
 
-			foreach(var route in obj.Endpoints.List.Values)
+			foreach (var route in obj.Endpoints.List.Values)
 			{
 				var button = new Button();
 				button.Content = route.Name;
@@ -203,7 +213,7 @@ namespace OscGuiControl
 			deselect(level);
 			selectedRoute = null;
 			OnRouteChanged();
-			
+
 		}
 
 		private void OnTreeClick(object sender, RoutedEventArgs e)
@@ -211,7 +221,7 @@ namespace OscGuiControl
 			var button = sender as Button;
 			var tree = button.DataContext as OscTree.Tree;
 
-	
+
 			int level = tree.Address.TreeLevel();
 			removeExtraPanels(level);
 			deselect(level - 1);
@@ -236,7 +246,7 @@ namespace OscGuiControl
 		private void deselect(int level)
 		{
 			if (level >= panels.Count) return;
-			foreach(Button button in panels[level].Children)
+			foreach (Button button in panels[level].Children)
 			{
 				button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3a3a3a"));
 				button.Background.Opacity = 1.0;
@@ -245,7 +255,7 @@ namespace OscGuiControl
 
 		private void select(Button button)
 		{
-			switch((ButtonType)button.Tag)
+			switch ((ButtonType)button.Tag)
 			{
 				case ButtonType.Tree:
 					Color g = Colors.Green;
@@ -262,7 +272,7 @@ namespace OscGuiControl
 					y.A = 128;
 					button.Background = new SolidColorBrush(y);
 					break;
-			}		
+			}
 		}
 
 	}

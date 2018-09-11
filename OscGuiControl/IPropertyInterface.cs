@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OscGuiControl
 {
-	interface IPropertyInterface
+	public interface IPropertyInterface
 	{
 		PropertyCollection Properties { get; }
 	}

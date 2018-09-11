@@ -3,19 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Media;
 using Newtonsoft.Json.Linq;
 
 namespace OscGuiControl.Controls
 {
-	class Knob : yGuiWPF.Controls.Knob, OscTree.IOscObject, IJsonInterface, IPropertyInterface
+	class Knob : yGuiWPF.Controls.Knob, OscTree.IOscObject, IJsonInterface, IPropertyInterface, IContextMenu
 	{
 		static private PropertyCollection properties = null;
 		public PropertyCollection Properties => properties;
 
 		private OscTree.Object oscObject;
 		public OscTree.Object OscObject => oscObject;
-		public OscTree.Routes Targets => oscObject.Targets;
+		public OscTree.Routes Targets
+		{
+			get => oscObject.Targets;
+			set
+			{
+				oscObject.Targets = value;
+			}
+		}
+
+		private bool changed = false;
+		public void Taint()
+		{
+			changed = true;
+		}
+
+		private ContextMenu menu = new ContextMenu();
+		public ContextMenu Menu => menu;
 
 		static private int id = 1;
 
@@ -33,38 +50,52 @@ namespace OscGuiControl.Controls
 
 		public Knob()
 		{
-			oscObject = new OscTree.Object(new OscTree.Address("Knob" + id++));
+			oscObject = new OscTree.Object(new OscTree.Address("Knob" + id++), typeof(float));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Value", (args) =>
 			{
 				Value = OscParser.ToFloat(args);
-			}));
+			}, typeof(float)));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Minimum", (args) =>
 			{
 				Minimum = OscParser.ToFloat(args);
-			}));
+			}, typeof(float)));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Maximum", (args) =>
 			{
 				Maximum = OscParser.ToFloat(args);
-			}));
+			}, typeof(float)));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("ShowValue", (args) =>
 			{
 				ShowValue = OscParser.ToBool(args);
-			}));
+			}, typeof(bool)));
 
 			OnValueChange += (s, e) =>
 			{
 				OscObject.Send(Value);				
 			};
+
+			foreach (var endpoint in oscObject.Endpoints.List)
+			{
+				var item = new MenuItem();
+				item.Header = "Route to " + endpoint.Key;
+				item.Click += (sender, e) =>
+				{
+					var route = oscObject.GetRouteString(OscTree.Route.RouteType.ID) + "/" + endpoint.Key;
+					System.Windows.Clipboard.SetText(route);
+				};
+				menu.Items.Add(item);
+			}
 		}
 
 		public string ObjName
 		{
 			get => OscObject.Address.Name;
-			set => OscObject.Address.Name = value;
+			set {
+				OscObject.Address.Name = value;
+			}
 		}
 
 		public new string Name => ObjName;
@@ -77,7 +108,10 @@ namespace OscGuiControl.Controls
 		public Color BrushColor
 		{
 			get => (Color as SolidColorBrush).Color;
-			set => Color = new SolidColorBrush(value);
+			set
+			{
+				Color = new SolidColorBrush(value);
+			}
 		}
 
 		public JObject ToJSON()
@@ -89,6 +123,7 @@ namespace OscGuiControl.Controls
 			result.Content = DisplayName;
 			result.ShowValue = ShowValue;
 			result.Targets = OscObject.Targets;
+			changed = false;
 			return result.Get();
 		}
 
@@ -103,7 +138,13 @@ namespace OscGuiControl.Controls
 			DisplayName = json.Content as string;
 			ShowValue = json.ShowValue;
 			OscObject.Targets = json.Targets;
+			changed = false;
 			return true;
+		}
+
+		public bool HasChanged()
+		{
+			return changed;
 		}
 	}
 }

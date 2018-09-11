@@ -6,5 +6,7 @@ namespace OscGuiControl
 	{
 		JObject ToJSON();
 		bool LoadJSON(JObject obj);
+
+		bool HasChanged();
 	}
 }

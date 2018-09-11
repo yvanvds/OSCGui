@@ -51,10 +51,23 @@ namespace OscGuiControl
 			{
 				if (value != null && value.Count > 0)
 				{
-					JArray targets = new JArray();
+					JObject targets = new JObject();
 					foreach (var target in value)
 					{
-						targets.Add(target.OriginalName);
+						JObject obj = new JObject();
+						if(target.Replacements != null)
+						{
+							obj["Replacements"] = new JObject();
+							foreach (var replacement in target.Replacements)
+							{
+								obj["Replacements"]["" + replacement.Key] = replacement.Value;
+							}
+						}
+						if(target.ValueOverrideMethodName != string.Empty)
+						{
+							obj["Method"] = target.ValueOverrideMethodName;
+						}
+						targets[target.OriginalName] = obj;
 					}
 					obj["Targets"] = targets;
 				}
@@ -63,11 +76,32 @@ namespace OscGuiControl
 			{
 				if(obj.ContainsKey("Targets"))
 				{
-					var targets = obj["Targets"] as JArray;
+					var targets = obj["Targets"] as JObject;
 					var result = new OscTree.Routes();
 					foreach(var target in targets)
 					{
-						OscTree.Route route = new OscTree.Route((string)target, OscTree.Route.RouteType.ID);
+						OscTree.Route route = new OscTree.Route((string)target.Key, OscTree.Route.RouteType.ID);
+						var content = target.Value as JObject;
+						if(content.ContainsKey("Replacements"))
+						{
+							var replacements = content["Replacements"] as JObject;
+							if (replacements.Count > 0)
+							{
+								route.Replacements = new Dictionary<int, string>();
+								foreach (var replacement in replacements)
+								{
+									route.Replacements[Convert.ToInt32(replacement.Key)] = (string)replacement.Value;
+								}
+							}
+						}
+						if(content.ContainsKey("Method"))
+						{
+							route.ValueOverrideMethodName = (string)content["Method"];
+						} else
+						{
+							route.ValueOverrideMethodName = string.Empty;
+						}
+
 						result.Add(route);
 					}
 					return result;

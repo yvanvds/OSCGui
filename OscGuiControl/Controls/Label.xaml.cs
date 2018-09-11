@@ -19,7 +19,7 @@ namespace OscGuiControl.Controls
 	/// <summary>
 	/// Interaction logic for Label.xaml
 	/// </summary>
-	public partial class Label : System.Windows.Controls.Label, OscTree.IOscObject, IJsonInterface, IPropertyInterface
+	public partial class Label : System.Windows.Controls.Label, OscTree.IOscObject, IJsonInterface, IPropertyInterface, IContextMenu
 	{
 		static private PropertyCollection properties = null;
 		public PropertyCollection Properties { get => properties; }
@@ -28,6 +28,15 @@ namespace OscGuiControl.Controls
 		public OscTree.Object OscObject => oscObject;
 
 		static private int id = 1;
+
+		private bool changed = false;
+		public void Taint()
+		{
+			changed = true;
+		}
+
+		private ContextMenu menu = new ContextMenu();
+		public ContextMenu Menu => menu;
 
 		static Label()
 		{
@@ -46,19 +55,29 @@ namespace OscGuiControl.Controls
 			InitializeComponent();
 			this.Style = FindResource("LabelStyle") as Style;
 
-			oscObject = new OscTree.Object(new OscTree.Address("Label" + id++));
+			oscObject = new OscTree.Object(new OscTree.Address("Label" + id++),typeof(int));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Text", (args) =>
 			{
 				Content = OscParser.ToString(args);
-			}));
+			}, typeof(string)));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("FontSize", (args) =>
 			{
 				FontSize = OscParser.ToInt(args);
-			}));
+			}, typeof(int)));
 
-
+			foreach (var endpoint in oscObject.Endpoints.List)
+			{
+				var item = new MenuItem();
+				item.Header = "Route to " + endpoint.Key;
+				item.Click += (sender, e) =>
+				{
+					var route = oscObject.GetRouteString(OscTree.Route.RouteType.ID) + "/" + endpoint.Key;
+					System.Windows.Clipboard.SetText(route);
+				};
+				menu.Items.Add(item);
+			}
 		}
 
 		public new double FontSize
@@ -76,7 +95,10 @@ namespace OscGuiControl.Controls
 		public string ObjName
 		{
 			get => OscObject.Address.Name;
-			set => OscObject.Address.Name = value;
+			set
+			{
+				OscObject.Address.Name = value;
+			}
 		}
 
 		public new string Name => ObjName;
@@ -90,7 +112,10 @@ namespace OscGuiControl.Controls
 		public Color Color
 		{
 			get => (Foreground as SolidColorBrush).Color;
-			set => Foreground = new SolidColorBrush(value);
+			set
+			{
+				Foreground = new SolidColorBrush(value);
+			}
 		}
 
 		public new bool IsEnabled
@@ -113,6 +138,7 @@ namespace OscGuiControl.Controls
 			result.FontWeight = FontWeight;
 			result.FontStyle = FontStyle;
 			result.HAlign = HorizontalContentAlignment;
+			changed = false;
 			return result.Get();
 		}
 
@@ -127,8 +153,13 @@ namespace OscGuiControl.Controls
 			FontWeight = json.FontWeight;
 			FontStyle = json.FontStyle;
 			HorizontalContentAlignment = json.HAlign;
-			
+			changed = false;
 			return true;
+		}
+
+		public bool HasChanged()
+		{
+			return changed;
 		}
 	}
 }

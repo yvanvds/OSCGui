@@ -1,0 +1,138 @@
+{
+  "Rows": 4,
+  "Columns": 4,
+  "Name": "Gui1",
+  "Uid": "5eo7_n17FTWX7",
+  "objects": [
+    {
+      "PosX": 0,
+      "PosY": 0,
+      "Rows": 1,
+      "Columns": 1,
+      "Child": {
+        "Type": "Button",
+        "UID": "bgkAPEfzeoQjsu",
+        "Name": "Button1",
+        "Content": "72",
+        "Color": "#FF008000",
+        "Background": "#FF4A4A4A",
+        "TextScale": "Normal",
+        "Targets": [
+          "/Root/5eo7_n17FTWX7/7H97ULsAAXeh/Blink"
+        ],
+        "IsToggle": false
+      }
+    },
+    {
+      "PosX": 0,
+      "PosY": 1,
+      "Rows": 3,
+      "Columns": 1,
+      "Child": {
+        "Type": "Slider",
+        "UID": "RJraT-DC",
+        "Name": "Slider1",
+        "Minimum": 0.0,
+        "Maximum": 100.0,
+        "Color": "#FF888888",
+        "Background": "#FF4A4A4A",
+        "Handle": "#FFFFFFFF",
+        "Targets": [
+          "/Root/5eo7_n17FTWX7/bgkAPEfzeoQjsu/Text"
+        ]
+      }
+    },
+    {
+      "PosX": 1,
+      "PosY": 0,
+      "Rows": 1,
+      "Columns": 1,
+      "Child": {
+        "Type": "TextBox",
+        "UID": "10qs7kST",
+        "Name": "TextBox1",
+        "Content": "test",
+        "FontSize": 12.0,
+        "Targets": [
+          "/Root/5eo7_n17FTWX7/YKoUeMHQz0/Text"
+        ]
+      }
+    },
+    {
+      "PosX": 1,
+      "PosY": 1,
+      "Rows": 1,
+      "Columns": 1,
+      "Child": {
+        "Type": "Label",
+        "UID": "YKoUeMHQz0",
+        "Name": "Label1",
+        "Content": "test",
+        "Color": "#FFFFFFFF",
+        "FontSize": 12.0,
+        "FontWeight": 400,
+        "FontStyle": "Normal",
+        "HAlign": "Left"
+      }
+    },
+    {
+      "PosX": 1,
+      "PosY": 2,
+      "Rows": 1,
+      "Columns": 1,
+      "Child": {
+        "Type": "Knob",
+        "UID": "tYg8S7Bmk",
+        "Name": "Knob1",
+        "Minimum": 0.0,
+        "Maximum": 100.0,
+        "Color": "#FF7CFC00",
+        "Content": "",
+        "ShowValue": true,
+        "Targets": [
+          "/Root/5eo7_n17FTWX7/RJraT-DC/Value"
+        ]
+      }
+    },
+    {
+      "PosX": 1,
+      "PosY": 3,
+      "Rows": 1,
+      "Columns": 1,
+      "Child": {
+        "Type": "Led",
+        "UID": "7H97ULsAAXeh",
+        "Name": "Led1",
+        "Color": "#FFFF1493",
+        "Scale": 1.0
+      }
+    },
+    {
+      "PosX": 2,
+      "PosY": 0,
+      "Rows": 2,
+      "Columns": 2,
+      "Child": {
+        "Type": "MTPad",
+        "UID": "QW-jbE4u",
+        "Name": "MTPad1",
+        "Color": "#FFFF0000",
+        "Background": "#FF4A4A4A"
+      }
+    },
+    {
+      "PosX": 2,
+      "PosY": 2,
+      "Rows": 2,
+      "Columns": 2,
+      "Child": {
+        "Type": "XYPad",
+        "UID": "Ewd65Wy",
+        "Name": "XYPad1",
+        "Color": "#FF00FFFF",
+        "Centered": true,
+        "ShowValue": false
+      }
+    }
+  ]
+}

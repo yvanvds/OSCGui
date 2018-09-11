@@ -21,8 +21,11 @@ namespace OscGuiControl.Controls
 	/// </summary>
 	public partial class BaseControl : UserControl
 	{
-		ContextMenu menu;
+		ContextMenu editMenu;
+
 		private OscGUI parent;
+
+		private bool changed = false;
 
 		public UIElement Child { get => Element.Child; }
 
@@ -32,62 +35,74 @@ namespace OscGuiControl.Controls
 			this.parent = parent;
 
 			SetEditMode(false);
-			menu = new ContextMenu();
+			editMenu = new ContextMenu();
 			{
 				var item = new MenuItem();
 				item.Header = "Clear";
 				item.Click += ClearItem;
-				menu.Items.Add(item);
+				editMenu.Items.Add(item);
 			}
-			menu.Items.Add(new Separator());
+			editMenu.Items.Add(new Separator());
 			{
 				var item = new MenuItem();
 				item.Header = "Label";
 				item.Click += AddLabel;
-				menu.Items.Add(item);
+				editMenu.Items.Add(item);
 			}
 			{
 				var item = new MenuItem();
 				item.Header = "Button";
 				item.Click += AddButton;
-				menu.Items.Add(item);
+				editMenu.Items.Add(item);
 			}
 			{
 				var item = new MenuItem();
 				item.Header = "Slider";
 				item.Click += AddSlider;
-				menu.Items.Add(item);
+				editMenu.Items.Add(item);
 			}
 			{
 				var item = new MenuItem();
 				item.Header = "Knob";
 				item.Click += AddKnob;
-				menu.Items.Add(item);
+				editMenu.Items.Add(item);
 			}
 			{
 				var item = new MenuItem();
 				item.Header = "TextBox";
 				item.Click += AddTextBox;
-				menu.Items.Add(item);
+				editMenu.Items.Add(item);
 			}
 			{
 				var item = new MenuItem();
 				item.Header = "Led";
 				item.Click += AddLed;
-				menu.Items.Add(item);
+				editMenu.Items.Add(item);
 			}
 			{
 				var item = new MenuItem();
 				item.Header = "XY-Pad";
 				item.Click += AddXYPad;
-				menu.Items.Add(item);
+				editMenu.Items.Add(item);
 			}
 			{
 				var item = new MenuItem();
 				item.Header = "MultiTouch Pad";
 				item.Click += AddMultiTouchPad;
-				menu.Items.Add(item);
+				editMenu.Items.Add(item);
 			}
+
+			
+		}
+
+		public bool NeedsSaving()
+		{
+			if (changed) return true;
+			if(Element.Child != null && (Element.Child as IJsonInterface).HasChanged())
+			{
+				return true;
+			} 
+			return false;
 		}
 
 		private void AddMultiTouchPad(object sender, RoutedEventArgs e)
@@ -97,6 +112,7 @@ namespace OscGuiControl.Controls
 			pad.IsHitTestVisible = false;
 			Element.Child = pad;
 			parent.OscTree.Add(pad.OscObject);
+			if (editMode) changed = true;
 		}
 
 		private void AddXYPad(object sender, RoutedEventArgs e)
@@ -106,6 +122,7 @@ namespace OscGuiControl.Controls
 			pad.IsHitTestVisible = false;
 			Element.Child = pad;
 			parent.OscTree.Add(pad.OscObject);
+			if (editMode) changed = true;
 		}
 
 		private void AddLed(object sender, RoutedEventArgs e)
@@ -115,6 +132,7 @@ namespace OscGuiControl.Controls
 			led.IsHitTestVisible = false;
 			Element.Child = led;
 			parent.OscTree.Add(led.OscObject);
+			if (editMode) changed = true;
 		}
 
 		private void AddKnob(object sender, RoutedEventArgs e)
@@ -124,6 +142,7 @@ namespace OscGuiControl.Controls
 			knob.IsHitTestVisible = false;
 			Element.Child = knob;
 			parent.OscTree.Add(knob.OscObject);
+			if (editMode) changed = true;
 		}
 
 		private void AddTextBox(object sender, RoutedEventArgs e)
@@ -133,6 +152,7 @@ namespace OscGuiControl.Controls
 			textbox.IsHitTestVisible = false;
 			Element.Child = textbox;
 			parent.OscTree.Add(textbox.OscObject);
+			if (editMode) changed = true;
 		}
 
 		private void AddSlider(object sender, RoutedEventArgs e)
@@ -143,6 +163,7 @@ namespace OscGuiControl.Controls
 			slider.IsHitTestVisible = false;
 			Element.Child = slider;
 			parent.OscTree.Add(slider.OscObject);
+			if (editMode) changed = true;
 		}
 
 		private void AddButton(object sender, RoutedEventArgs e)
@@ -152,6 +173,7 @@ namespace OscGuiControl.Controls
 			button.IsHitTestVisible = false;
 			Element.Child = button;
 			parent.OscTree.Add(button.OscObject);
+			if (editMode) changed = true;
 		}
 
 		private void AddLabel(object sender, RoutedEventArgs e)
@@ -161,6 +183,7 @@ namespace OscGuiControl.Controls
 			label.IsHitTestVisible = false;
 			Element.Child = label;
 			parent.OscTree.Add(label.OscObject);
+			if (editMode) changed = true;
 		}
 
 		private void ClearItem(object sender, RoutedEventArgs e)
@@ -170,6 +193,7 @@ namespace OscGuiControl.Controls
 				RemoveCurrentElement();
 			}
 			Element.Child = null;
+			if (editMode) changed = true;
 		}
 
 		private int rows = 1;
@@ -220,7 +244,19 @@ namespace OscGuiControl.Controls
 				? new SolidColorBrush(Color.FromRgb(58, 58, 58))
 				: new SolidColorBrush(Color.FromRgb(26, 26, 26));
 
-			this.ContextMenu = value ? menu : null;
+			if(value)
+			{
+				ContextMenu = editMenu;
+			} else
+			{
+				if(Element.Child is IContextMenu)
+				{
+					ContextMenu = (Element.Child as IContextMenu).Menu;
+				} else
+				{
+					ContextMenu = null;
+				}
+			}
 
 			if(!value)
 			{
@@ -281,6 +317,7 @@ namespace OscGuiControl.Controls
 
 		public bool LoadJSON(JObject obj)
 		{
+			SetEditMode(false);
 			Rows = (int)obj["Rows"];
 			Columns = (int)obj["Columns"];
 
@@ -322,8 +359,6 @@ namespace OscGuiControl.Controls
 					parent.OscTree.Add(child.OscObject);
 				}
 			}
-			SetEditMode(false);
-
 			return true;
 		} 
 

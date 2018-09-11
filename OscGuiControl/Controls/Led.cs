@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Media;
 using Newtonsoft.Json.Linq;
 
 namespace OscGuiControl.Controls
 {
-	class Led : yGuiWPF.Controls.Led, OscTree.IOscObject, IJsonInterface, IPropertyInterface
+	class Led : yGuiWPF.Controls.Led, OscTree.IOscObject, IJsonInterface, IPropertyInterface, IContextMenu
 	{
 		static private PropertyCollection properties = null;
 		public PropertyCollection Properties { get => properties; }
@@ -17,6 +18,19 @@ namespace OscGuiControl.Controls
 		public OscTree.Object OscObject => oscObject;
 
 		static private int id = 1;
+
+		private bool changed = false;
+		public void Taint()
+		{
+			changed = true;
+		}
+		public bool HasChanged()
+		{
+			return changed;
+		}
+
+		private ContextMenu menu = new ContextMenu();
+		public ContextMenu Menu => menu;
 
 		static Led()
 		{
@@ -28,18 +42,33 @@ namespace OscGuiControl.Controls
 
 		public Led()
 		{
-			oscObject = new OscTree.Object(new OscTree.Address("Led" + id++));
+			oscObject = new OscTree.Object(new OscTree.Address("Led" + id++), typeof(int));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Blink", (args) =>
 			{
 				Blink(100);
 			}));
+
+			foreach (var endpoint in oscObject.Endpoints.List)
+			{
+				var item = new MenuItem();
+				item.Header = "Route to " + endpoint.Key;
+				item.Click += (sender, e) =>
+				{
+					var route = oscObject.GetRouteString(OscTree.Route.RouteType.ID) + "/" + endpoint.Key;
+					System.Windows.Clipboard.SetText(route);
+				};
+				menu.Items.Add(item);
+			}
 		}
 
 		public string ObjName
 		{
 			get => OscObject.Address.Name;
-			set => OscObject.Address.Name = value;
+			set
+			{
+				OscObject.Address.Name = value;
+			}
 		}
 
 		public new string Name => ObjName;
@@ -52,7 +81,10 @@ namespace OscGuiControl.Controls
 		public Color BrushColor
 		{
 			get => (Color as SolidColorBrush).Color;
-			set => Color = new SolidColorBrush(value);
+			set
+			{
+				Color = new SolidColorBrush(value);
+			}
 		}
 
 		public JObject ToJSON()
@@ -60,6 +92,7 @@ namespace OscGuiControl.Controls
 			OscJsonObject result = new OscJsonObject("Led", ID, Name);
 			result.Color = BrushColor;
 			result.Scale = Scale;
+			changed = false;
 			return result.Get();
 		}
 
@@ -70,6 +103,7 @@ namespace OscGuiControl.Controls
 			ObjName = json.Name;
 			Color = new SolidColorBrush(json.Color);
 			Scale = json.Scale;
+			changed = false;
 			return true;
 		}
 	}

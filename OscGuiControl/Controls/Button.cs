@@ -4,21 +4,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Media;
 using yGuiWPF;
 
 namespace OscGuiControl.Controls
 {
-	public class Button : yGuiWPF.Controls.Button, OscTree.IOscObject, IJsonInterface, IPropertyInterface
+	public class Button : yGuiWPF.Controls.Button, OscTree.IOscObject, IJsonInterface, IPropertyInterface, IContextMenu
 	{
 		static private PropertyCollection properties = null;
 		public PropertyCollection Properties { get => properties; }
 
 		private OscTree.Object oscObject;
 		public OscTree.Object OscObject => oscObject;
-		public OscTree.Routes Targets => oscObject.Targets;
+		public OscTree.Routes Targets
+		{
+			get => oscObject.Targets;
+			set
+			{
+				oscObject.Targets = value;
+			}
+		}
 
 		static private int id = 1;
+
+		private bool changed = false;
+		public void Taint()
+		{
+			changed = true;
+		}
 
 		static Button()
 		{
@@ -34,22 +48,39 @@ namespace OscGuiControl.Controls
 
 		public Button()
 		{
-			oscObject = new OscTree.Object(new OscTree.Address("Button" + id++));
+			oscObject = new OscTree.Object(new OscTree.Address("Button" + id++), typeof(bool));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Text", (args) =>
 			{
 				Text = OscParser.ToString(args);
-			}));
+			}, typeof(string)));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("TextScale", (args) =>
 			{
 				TextScale = (TextScales)OscParser.ToInt(args);
-			}));
+			}, typeof(int)));
 
 			ForeGround = new SolidColorBrush(System.Windows.Media.Colors.Green);
 			Text = "BUTTON";
 
 			Click += OnCick;
+
+			foreach(var endpoint in oscObject.Endpoints.List)
+			{
+				var item = new MenuItem();
+				item.Header = "Route to " + endpoint.Key;
+				item.Click += (sender, e) =>
+				{
+					var route = oscObject.GetRouteString(OscTree.Route.RouteType.ID) + "/" + endpoint.Key;
+					System.Windows.Clipboard.SetText(route);
+				};
+				menu.Items.Add(item);
+			}
+		}
+
+		private void Item_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			throw new NotImplementedException();
 		}
 
 		private void OnCick(object sender, System.Windows.RoutedEventArgs e)
@@ -60,14 +91,17 @@ namespace OscGuiControl.Controls
 				OscObject.Send(Toggled);
 			} else
 			{
-				OscObject.Send(null);
+				OscObject.Send(true);
 			}
 		}
 
 		public string ObjName
 		{
 			get => OscObject.Address.Name;
-			set => OscObject.Address.Name = value;
+			set
+			{
+				OscObject.Address.Name = value;
+			}
 		}
 
 		public new string Name => ObjName;
@@ -80,14 +114,23 @@ namespace OscGuiControl.Controls
 		public Color Color
 		{
 			get => (ForeGround as SolidColorBrush).Color;
-			set => ForeGround = new SolidColorBrush(value);
+			set
+			{
+				ForeGround = new SolidColorBrush(value);
+			}
 		}
 
 		public Color Background
 		{
 			get => (BackGround as SolidColorBrush).Color;
-			set => BackGround = new SolidColorBrush(value);
+			set
+			{
+				BackGround = new SolidColorBrush(value);
+			}
 		}
+
+		private ContextMenu menu = new ContextMenu();
+		public ContextMenu Menu => menu;
 
 		public JObject ToJSON()
 		{
@@ -98,6 +141,7 @@ namespace OscGuiControl.Controls
 			result.TextScale = TextScale;
 			result.Targets = OscObject.Targets;
 			result.IsToggle = IsToggle;
+			changed = false;
 			return result.Get();
 		}
 
@@ -112,7 +156,13 @@ namespace OscGuiControl.Controls
 			TextScale = json.TextScale;
 			OscObject.Targets = json.Targets;
 			IsToggle = json.IsToggle;
+			changed = false;
 			return true;
+		}
+
+		public bool HasChanged()
+		{
+			return changed;
 		}
 	}
 }

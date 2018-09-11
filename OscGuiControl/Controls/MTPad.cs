@@ -4,20 +4,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace OscGuiControl.Controls
 {
-	public class MTPad : yGuiWPF.Controls.MTPad, OscTree.IOscObject, IJsonInterface, IPropertyInterface
+	public class MTPad : yGuiWPF.Controls.MTPad, OscTree.IOscObject, IJsonInterface, IPropertyInterface, IContextMenu
 	{
 		static private PropertyCollection properties = null;
 		public PropertyCollection Properties { get => properties; }
 
 		private OscTree.Object oscObject;
 		public OscTree.Object OscObject => oscObject;
-		public OscTree.Routes Targets => oscObject.Targets;
+		public OscTree.Routes Targets
+		{
+			get => oscObject.Targets;
+			set
+			{
+				oscObject.Targets = value;
+			}
+		}
 
 		static private int id = 1;
+
+		private bool changed = false;
+		public void Taint()
+		{
+			changed = true;
+		}
+		public bool HasChanged()
+		{
+			return changed;
+		}
+
+		private ContextMenu menu = new ContextMenu();
+		public ContextMenu Menu => menu;
 
 		static MTPad()
 		{
@@ -30,13 +51,28 @@ namespace OscGuiControl.Controls
 
 		public MTPad()
 		{
-			oscObject = new OscTree.Object(new OscTree.Address("MTPad" + id++));
+			oscObject = new OscTree.Object(new OscTree.Address("MTPad" + id++), typeof(float));
+
+			foreach (var endpoint in oscObject.Endpoints.List)
+			{
+				var item = new MenuItem();
+				item.Header = "Route to " + endpoint.Key;
+				item.Click += (sender, e) =>
+				{
+					var route = oscObject.GetRouteString(OscTree.Route.RouteType.ID) + "/" + endpoint.Key;
+					System.Windows.Clipboard.SetText(route);
+				};
+				menu.Items.Add(item);
+			}
 		}
 
 		public string ObjName
 		{
 			get => OscObject.Address.Name;
-			set => OscObject.Address.Name = value;
+			set
+			{
+				OscObject.Address.Name = value;
+			}
 		}
 
 		public new string Name => ObjName;
@@ -49,13 +85,19 @@ namespace OscGuiControl.Controls
 		public Color Color
 		{
 			get => (ForeGround as SolidColorBrush).Color;
-			set => ForeGround = new SolidColorBrush(value);
+			set
+			{
+				ForeGround = new SolidColorBrush(value);
+			}
 		}
 
 		public Color Background
 		{
 			get => (BackGround as SolidColorBrush).Color;
-			set => BackGround = new SolidColorBrush(value);
+			set
+			{
+				BackGround = new SolidColorBrush(value);
+			}
 		}
 
 		public JObject ToJSON()
@@ -64,6 +106,7 @@ namespace OscGuiControl.Controls
 			result.Color = ForeGround.Color;
 			result.Background = BackGround.Color;
 			result.Targets = OscObject.Targets;
+			changed = false;
 			return result.Get();
 		}
 
@@ -75,6 +118,7 @@ namespace OscGuiControl.Controls
 			ForeGround = new SolidColorBrush(json.Color);
 			BackGround = new SolidColorBrush(json.Background);
 			OscObject.Targets = json.Targets;
+			changed = false;
 			return true;
 		}
 	}

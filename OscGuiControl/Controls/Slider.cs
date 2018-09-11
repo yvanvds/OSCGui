@@ -4,20 +4,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace OscGuiControl.Controls
 {
-	public class Slider : yGuiWPF.Controls.Slider, OscTree.IOscObject, IJsonInterface, IPropertyInterface
+	public class Slider : yGuiWPF.Controls.Slider, OscTree.IOscObject, IJsonInterface, IPropertyInterface, IContextMenu
 	{
 		static private PropertyCollection properties = null;
 		public PropertyCollection Properties { get => properties; }
 
 		private OscTree.Object oscObject;
 		public OscTree.Object OscObject => oscObject;
-		public OscTree.Routes Targets => oscObject.Targets;
+		public OscTree.Routes Targets
+		{
+			get => oscObject.Targets;
+			set
+			{
+				oscObject.Targets = value;
+			}
+		}
 
 		static private int id = 1;
+
+		private bool changed = false;
+		public bool HasChanged()
+		{
+			return changed;
+		}
+		public void Taint()
+		{
+			changed = true;
+		}
+
+		private ContextMenu menu = new ContextMenu();
+		public ContextMenu Menu => menu;
 
 		static Slider()
 		{
@@ -33,33 +54,48 @@ namespace OscGuiControl.Controls
 
 		public Slider()
 		{
-			oscObject = new OscTree.Object(new OscTree.Address("Slider" + id++));
+			oscObject = new OscTree.Object(new OscTree.Address("Slider" + id++), typeof(float));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Value", (args) =>
 			{
 				Value = OscParser.ToFloat(args);
-			}));
+			}, typeof(float)));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Minimum", (args) =>
 			{
 				Minimum = OscParser.ToFloat(args);
-			}));
+			}, typeof(float)));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Maximum", (args) =>
 			{
 				Maximum = OscParser.ToFloat(args);
-			}));
+			}, typeof(float)));
 
 			Changed += (s, e) =>
 			{
 				OscObject.Send(Value);
 			};
+
+			foreach (var endpoint in oscObject.Endpoints.List)
+			{
+				var item = new MenuItem();
+				item.Header = "Route to " + endpoint.Key;
+				item.Click += (sender, e) =>
+				{
+					var route = oscObject.GetRouteString(OscTree.Route.RouteType.ID) + "/" + endpoint.Key;
+					System.Windows.Clipboard.SetText(route);
+				};
+				menu.Items.Add(item);
+			}
 		}
 
 		public string ObjName
 		{
 			get => OscObject.Address.Name;
-			set => OscObject.Address.Name = value;
+			set
+			{
+				OscObject.Address.Name = value;
+			}
 		}
 
 		public new string Name => ObjName;
@@ -72,19 +108,28 @@ namespace OscGuiControl.Controls
 		public Color Color
 		{
 			get => (ForeGround as SolidColorBrush).Color;
-			set => ForeGround = new SolidColorBrush(value);
+			set
+			{
+				ForeGround = new SolidColorBrush(value);
+			}
 		}
 
 		public Color Background
 		{
 			get => (BackGround as SolidColorBrush).Color;
-			set => BackGround = new SolidColorBrush(value);
+			set
+			{
+				BackGround = new SolidColorBrush(value);
+			}
 		}
 
 		public Color Accent
 		{
 			get => (Handle as SolidColorBrush).Color;
-			set => Handle = new SolidColorBrush(value);
+			set
+			{
+				Handle = new SolidColorBrush(value);
+			}
 		}
 
 		public JObject ToJSON()
@@ -96,6 +141,7 @@ namespace OscGuiControl.Controls
 			result.Background = BackGround.Color;
 			result.Handle = Handle.Color;
 			result.Targets = OscObject.Targets;
+			changed = false;
 			return result.Get();
 		}
 
@@ -110,6 +156,7 @@ namespace OscGuiControl.Controls
 			Handle = new SolidColorBrush(json.Handle);
 			BackGround = new SolidColorBrush(json.Background);
 			OscObject.Targets = json.Targets;
+			changed = false;
 			return true;
 		}
 	}

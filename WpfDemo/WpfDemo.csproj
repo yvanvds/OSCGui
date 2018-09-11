@@ -58,6 +58,9 @@
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
     </Reference>
+    <Reference Include="OscTree, Version=1.0.21.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\OscGuiControl\packages\OscTree.1.0.21\lib\netstandard2.0\OscTree.dll</HintPath>
+    </Reference>
     <Reference Include="shortid, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\OscGuiControl\packages\shortid.2.0.0\lib\net45\shortid.dll</HintPath>
     </Reference>
@@ -150,10 +153,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\OscTree\OscTree\OscTree.csproj">
-      <Project>{e0982b79-3e9d-44f0-a38a-00dff9181acd}</Project>
-      <Name>OscTree</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OscGuiControl\OscGui.csproj">
       <Project>{c204dca4-1efb-46d7-8921-c7931b88e8ed}</Project>
       <Name>OscGui</Name>

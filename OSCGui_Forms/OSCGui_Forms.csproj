@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>yvan vander sanden</Authors>
+    <Company>Mute</Company>
+    <Product>Osc Gui Xamarin Forms</Product>
+    <PackageId>OscGui_Forms</PackageId>
+    <Description>A Grid based display module with integrated Osc messaging and related Gui Controls.</Description>
+    <PackageProjectUrl>https://github.com/yvanvds/OSCGui</PackageProjectUrl>
+    <Version>1.0.6</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="OscTree" Version="1.0.10" />
+    <PackageReference Include="Xamarin.Forms" Version="3.1.0.637273" />
+    <PackageReference Include="yGuiXamarin" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>
