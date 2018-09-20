@@ -13,7 +13,7 @@ namespace OSCGui_Forms.Controls
 		public Label(JObject obj)
 		{
 			OscJsonObject json = new OscJsonObject(obj);
-			oscObject = new OscTree.Object(new OscTree.Address(json.Name, json.UID));
+			oscObject = new OscTree.Object(new OscTree.Address(json.Name, json.UID), typeof(int));
 
 			Text = (string)json.Content;
 			TextColor = json.Color;

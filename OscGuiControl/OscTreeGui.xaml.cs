@@ -25,7 +25,7 @@ namespace OscGuiControl
 			Endpoint,
 		}
 
-		private List<StackPanel> panels = new List<StackPanel>();
+		private List<ScrollViewer> panels = new List<ScrollViewer>();
 
 		public OscTreeGui()
 		{
@@ -63,7 +63,7 @@ namespace OscGuiControl
 			int level = 0;
 			foreach (var id in route.Steps)
 			{
-				foreach (var elm in panels[level].Children)
+				foreach (var elm in (panels[level].Content as StackPanel).Children)
 				{
 					var button = elm as Button;
 					ButtonType type = (ButtonType)button.Tag;
@@ -113,12 +113,17 @@ namespace OscGuiControl
 			LevelGrid.ColumnDefinitions.Add(column);
 
 			var panel = new StackPanel();
-
 			panel.Orientation = Orientation.Vertical;
-			Grid.SetColumn(panel, panels.Count);
-			Grid.SetRow(panel, 0);
-			LevelGrid.Children.Add(panel);
-			panels.Add(panel);
+
+			var scroll = new ScrollViewer();
+			scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+			scroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+			scroll.Content = panel;
+
+			Grid.SetColumn(scroll, panels.Count);
+			Grid.SetRow(scroll, 0);
+			LevelGrid.Children.Add(scroll);
+			panels.Add(scroll);
 
 			foreach (var elm in tree.Children.List.Values)
 			{
@@ -141,6 +146,7 @@ namespace OscGuiControl
 					button.BorderBrush = new SolidColorBrush(Colors.YellowGreen);
 					button.Click += OnObjectClick;
 				}
+				
 				panel.Children.Add(button);
 			}
 
@@ -148,7 +154,7 @@ namespace OscGuiControl
 			{
 				var button = new Button();
 				button.Content = obj.Name;
-				button.DataContext = obj;
+				button.DataContext = tree;
 				button.Tag = ButtonType.Endpoint;
 				button.BorderBrush = new SolidColorBrush(Colors.Yellow);
 				button.Click += RouteClicked;
@@ -163,12 +169,17 @@ namespace OscGuiControl
 			LevelGrid.ColumnDefinitions.Add(column);
 
 			var panel = new StackPanel();
-
 			panel.Orientation = Orientation.Vertical;
-			Grid.SetColumn(panel, panels.Count);
-			Grid.SetRow(panel, 0);
-			LevelGrid.Children.Add(panel);
-			panels.Add(panel);
+
+			var scroll = new ScrollViewer();
+			scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+			scroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+			scroll.Content = panel;
+
+			Grid.SetColumn(scroll, panels.Count);
+			Grid.SetRow(scroll, 0);
+			LevelGrid.Children.Add(scroll);
+			panels.Add(scroll);
 
 			foreach (var route in obj.Endpoints.List.Values)
 			{
@@ -246,7 +257,7 @@ namespace OscGuiControl
 		private void deselect(int level)
 		{
 			if (level >= panels.Count) return;
-			foreach (Button button in panels[level].Children)
+			foreach (Button button in (panels[level].Content as StackPanel).Children)
 			{
 				button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3a3a3a"));
 				button.Background.Opacity = 1.0;

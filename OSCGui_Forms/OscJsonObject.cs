@@ -54,10 +54,15 @@ namespace OSCGui_Forms
 						JObject obj = new JObject();
 						if (target.Replacements != null)
 						{
+							obj["Replacements"] = new JObject();
 							foreach (var replacement in target.Replacements)
 							{
-								obj[replacement.Key] = replacement.Value;
+								obj["Replacements"]["" + replacement.Key] = replacement.Value;
 							}
+						}
+						if (target.ValueOverrideMethodName != string.Empty)
+						{
+							obj["Method"] = target.ValueOverrideMethodName;
 						}
 						targets[target.OriginalName] = obj;
 					}
@@ -73,14 +78,26 @@ namespace OSCGui_Forms
 					foreach (var target in targets)
 					{
 						OscTree.Route route = new OscTree.Route((string)target.Key, OscTree.Route.RouteType.ID);
-						var replacements = target.Value as JObject;
-						if (replacements.Count > 0)
+						var content = target.Value as JObject;
+						if (content.ContainsKey("Replacements"))
 						{
-							route.Replacements = new Dictionary<int, string>();
-							foreach (var replacement in replacements)
+							var replacements = content["Replacements"] as JObject;
+							if (replacements.Count > 0)
 							{
-								route.Replacements[Convert.ToInt32(replacement.Key)] = (string)replacement.Value;
+								route.Replacements = new Dictionary<int, string>();
+								foreach (var replacement in replacements)
+								{
+									route.Replacements[Convert.ToInt32(replacement.Key)] = (string)replacement.Value;
+								}
 							}
+						}
+						if (content.ContainsKey("Method"))
+						{
+							route.ValueOverrideMethodName = (string)content["Method"];
+						}
+						else
+						{
+							route.ValueOverrideMethodName = string.Empty;
 						}
 
 						result.Add(route);

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace OSCGui_Forms.Controls
@@ -13,7 +14,7 @@ namespace OSCGui_Forms.Controls
 		public XYPad(JObject obj)
 		{
 			OscJsonObject json = new OscJsonObject(obj);
-			oscObject = new OscTree.Object(new OscTree.Address(json.Name, json.UID));
+			oscObject = new OscTree.Object(new OscTree.Address(json.Name, json.UID), typeof(Point));
 
 			ForeGround = json.Color;
 			Border = json.Color;

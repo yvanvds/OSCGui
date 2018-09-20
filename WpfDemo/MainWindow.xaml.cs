@@ -29,7 +29,7 @@ namespace WpfDemo
 		{
 			InitializeComponent();
 			Root = new OscTree.Tree(new OscTree.Address("Root", "Root"));
-
+			Gui2.OscTree.Endpoints.Add(new OscTree.Endpoint("Activate", (args) => { }, typeof(object)));
 			Root.Add(Gui1.OscTree);
 			Root.Add(Gui2.OscTree);
 

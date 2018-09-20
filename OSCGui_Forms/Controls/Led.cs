@@ -13,7 +13,7 @@ namespace OSCGui_Forms.Controls
 		public Led(JObject obj)
 		{
 			OscJsonObject json = new OscJsonObject(obj);
-			oscObject = new OscTree.Object(new OscTree.Address(json.Name, json.UID));
+			oscObject = new OscTree.Object(new OscTree.Address(json.Name, json.UID), typeof(int));
 
 			Color = json.Color;
 			Scale = json.Scale;
