@@ -283,6 +283,16 @@ namespace OscGuiControl
 			}
 		}
 
+		public bool Visible
+		{
+			set => obj["Visible"] = value;
+			get
+			{
+				if (obj.ContainsKey("Visible")) return (bool)obj["Visible"];
+				return true;
+			}
+		}
+
 		public float Scale
 		{
 			set => obj["Scale"] = value;

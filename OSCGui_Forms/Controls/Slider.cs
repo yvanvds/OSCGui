@@ -21,6 +21,7 @@ namespace OSCGui_Forms.Controls
 			Handle = json.Handle;
 			Background = json.Background;
 			OscObject.Targets = json.Targets;
+			Visible = json.Visible;
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Value", (args) =>
 			{
@@ -35,6 +36,11 @@ namespace OSCGui_Forms.Controls
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Maximum", (args) =>
 			{
 				Maximum = OscParser.ToFloat(args);
+			}));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				Visible = OscParser.ToBool(args);
 			}));
 
 			ValueChanged += Slider_ValueChanged;

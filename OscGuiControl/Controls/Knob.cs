@@ -46,6 +46,7 @@ namespace OscGuiControl.Controls
 			properties.Add("DisplayName", "Text", "Appearance");
 			properties.Add("ShowValue", "Show Value", "Appearance");
 			properties.Add("Targets", "Targets", "Events");
+			properties.Add("Visible", "Visible", "Appearance");
 		}
 
 		public Knob()
@@ -70,6 +71,11 @@ namespace OscGuiControl.Controls
 			oscObject.Endpoints.Add(new OscTree.Endpoint("ShowValue", (args) =>
 			{
 				ShowValue = OscParser.ToBool(args);
+			}, typeof(bool)));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				Visible = OscParser.ToBool(args);
 			}, typeof(bool)));
 
 			OnValueChange += (s, e) =>
@@ -123,6 +129,7 @@ namespace OscGuiControl.Controls
 			result.Content = DisplayName;
 			result.ShowValue = ShowValue;
 			result.Targets = OscObject.Targets;
+			result.Visible = Visible;
 			changed = false;
 			return result.Get();
 		}
@@ -138,6 +145,7 @@ namespace OscGuiControl.Controls
 			DisplayName = json.Content as string;
 			ShowValue = json.ShowValue;
 			OscObject.Targets = json.Targets;
+			Visible = json.Visible;
 			changed = false;
 			return true;
 		}

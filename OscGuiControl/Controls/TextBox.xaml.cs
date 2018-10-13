@@ -49,6 +49,7 @@ namespace OscGuiControl.Controls
 			properties.Add("ObjName", "Name");
 			properties.Add("FontSize");
 			properties.Add("Targets", "Targets", "Events");
+			properties.Add("Visible", "Visible", "Appearance");
 		}
 
 		public TextBox()
@@ -67,6 +68,11 @@ namespace OscGuiControl.Controls
 			{
 				FontSize = OscParser.ToInt(args);
 			}, typeof(int)));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				Visibility = OscParser.ToBool(args) ? Visibility.Visible : Visibility.Hidden;
+			}, typeof(bool)));
 
 			foreach (var endpoint in oscObject.Endpoints.List)
 			{
@@ -108,6 +114,7 @@ namespace OscGuiControl.Controls
 			result.Content = Text;
 			result.FontSize = FontSize;
 			result.Targets = OscObject.Targets;
+			result.Visible = Visibility == Visibility.Visible;
 			changed = false;
 			return result.Get();
 		}
@@ -120,6 +127,7 @@ namespace OscGuiControl.Controls
 			Text = json.Content as string;
 			FontSize = json.FontSize;
 			OscObject.Targets = json.Targets;
+			Visibility = json.Visible ? Visibility.Visible : Visibility.Hidden;
 			changed = false;
 			return true;
 		}

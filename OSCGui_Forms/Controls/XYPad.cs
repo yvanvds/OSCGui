@@ -21,6 +21,7 @@ namespace OSCGui_Forms.Controls
 			Centered = json.Centered;
 			ShowValue = json.ShowValue;
 			OscObject.Targets = json.Targets;
+			Visible = json.Visible;
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Coordinate", (args) =>
 			{
@@ -30,6 +31,11 @@ namespace OSCGui_Forms.Controls
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Centered", (args) =>
 			{
 				Centered = OscParser.ToBool(args);
+			}));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				Visible = OscParser.ToBool(args);
 			}));
 
 			ValueChanged += XYPad_ValueChanged;

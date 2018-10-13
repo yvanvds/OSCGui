@@ -268,6 +268,16 @@ namespace OSCGui_Forms
 			}
 		}
 
+		public bool Visible
+		{
+			set => obj["Visible"] = value;
+			get
+			{
+				if (obj.ContainsKey("Visible")) return (bool)obj["Visible"];
+				return true;
+			}
+		}
+
 		public bool IsToggle
 		{
 			set => obj["IsToggle"] = value;

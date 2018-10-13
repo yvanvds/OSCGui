@@ -49,6 +49,7 @@ namespace OscGuiControl.Controls
 			properties.Add("Centered", "Centered");
 			properties.Add("ShowValue");
 			properties.Add("Targets", "Targets", "Events");
+			properties.Add("Visible", "Visible", "Appearance");
 		}
 
 		public XYPad()
@@ -63,6 +64,11 @@ namespace OscGuiControl.Controls
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Centered", (args) =>
 			{
 				Centered = OscParser.ToBool(args);
+			}, typeof(bool)));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				Visible = OscParser.ToBool(args);
 			}, typeof(bool)));
 
 			OnValueChanged += (s, e) =>
@@ -116,6 +122,7 @@ namespace OscGuiControl.Controls
 			result.Centered = Centered;
 			result.ShowValue = ShowValue;
 			result.Targets = OscObject.Targets;
+			result.Visible = Visible;
 			changed = false;
 			return result.Get();
 		}
@@ -129,6 +136,7 @@ namespace OscGuiControl.Controls
 			Centered = json.Centered;
 			ShowValue = json.ShowValue;
 			OscObject.Targets = json.Targets;
+			Visible = json.Visible;
 			changed = false;
 			return true;
 		}

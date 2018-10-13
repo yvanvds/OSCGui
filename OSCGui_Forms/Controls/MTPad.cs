@@ -18,6 +18,12 @@ namespace OSCGui_Forms.Controls
 			ForeGround = json.Color;
 			BackGround = json.Background;
 			OscObject.Targets = json.Targets;
+			Visible = json.Visible;
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				Visible = OscParser.ToBool(args);
+			}));
 
 			this.TouchChanged += MTPad_TouchChanged;
 		}

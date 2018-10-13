@@ -18,6 +18,7 @@ namespace OSCGui_Forms.Controls
 			Text = json.Content as string;
 			FontSize = json.FontSize;
 			OscObject.Targets = json.Targets;
+			IsVisible = json.Visible;
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Text", (args) =>
 			{
@@ -27,6 +28,11 @@ namespace OSCGui_Forms.Controls
 			oscObject.Endpoints.Add(new OscTree.Endpoint("FontSize", (args) =>
 			{
 				FontSize = OscParser.ToInt(args);
+			}));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				IsVisible = OscParser.ToBool(args);
 			}));
 
 			TextChanged += TextBox_TextChanged;

@@ -17,10 +17,22 @@ namespace OSCGui_Forms.Controls
 
 			Color = json.Color;
 			Scale = json.Scale;
+			Visible = json.Visible;
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Blink", (args) =>
 			{
-				Blink(100);
+				int time = 100;
+				if(args.Length > 0)
+				{
+					if (args[0] is int) time = (int)args[0];
+					else if (args[0] is float) time = (int)args[0];
+				}
+				Blink(time);
+			}));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				Visible = OscParser.ToBool(args);
 			}));
 		}
 

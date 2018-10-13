@@ -38,6 +38,7 @@ namespace OscGuiControl.Controls
 			properties.Add("ObjName", "Name");
 			properties.Add("BrushColor", "Color", "Appearance");
 			properties.Add("Scale", "Size", "Appearance");
+			properties.Add("Visible", "Visible", "Appearance");
 		}
 
 		public Led()
@@ -48,6 +49,11 @@ namespace OscGuiControl.Controls
 			{
 				Blink(100);
 			}));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				Visible = OscParser.ToBool(args);
+			}, typeof(bool)));
 
 			foreach (var endpoint in oscObject.Endpoints.List)
 			{
@@ -92,6 +98,7 @@ namespace OscGuiControl.Controls
 			OscJsonObject result = new OscJsonObject("Led", ID, Name);
 			result.Color = BrushColor;
 			result.Scale = Scale;
+			result.Visible = Visible;
 			changed = false;
 			return result.Get();
 		}
@@ -103,6 +110,7 @@ namespace OscGuiControl.Controls
 			ObjName = json.Name;
 			Color = new SolidColorBrush(json.Color);
 			Scale = json.Scale;
+			Visible = json.Visible;
 			changed = false;
 			return true;
 		}

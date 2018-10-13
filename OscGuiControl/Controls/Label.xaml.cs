@@ -48,6 +48,7 @@ namespace OscGuiControl.Controls
 			properties.Add("HorizontalContentAlignment", "Alignment");
 			properties.Add("FontWeight");
 			properties.Add("FontStyle");
+			properties.Add("Visible", "Visible", "Appearance");
 		}
 
 		public Label()
@@ -66,6 +67,11 @@ namespace OscGuiControl.Controls
 			{
 				FontSize = OscParser.ToInt(args);
 			}, typeof(int)));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				Visibility = OscParser.ToBool(args) ? Visibility.Visible : Visibility.Hidden;
+			}, typeof(bool)));
 
 			foreach (var endpoint in oscObject.Endpoints.List)
 			{
@@ -138,6 +144,7 @@ namespace OscGuiControl.Controls
 			result.FontWeight = FontWeight;
 			result.FontStyle = FontStyle;
 			result.HAlign = HorizontalContentAlignment;
+			result.Visible = Visibility == Visibility.Visible  ? true : false;
 			changed = false;
 			return result.Get();
 		}
@@ -153,6 +160,7 @@ namespace OscGuiControl.Controls
 			FontWeight = json.FontWeight;
 			FontStyle = json.FontStyle;
 			HorizontalContentAlignment = json.HAlign;
+			Visibility = json.Visible ? Visibility.Visible : Visibility.Hidden;
 			changed = false;
 			return true;
 		}

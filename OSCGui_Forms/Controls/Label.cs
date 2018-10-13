@@ -27,6 +27,7 @@ namespace OSCGui_Forms.Controls
 				FontAttributes = Xamarin.Forms.FontAttributes.Italic;
 			}
 			HorizontalTextAlignment = json.HAlign;
+			IsVisible = json.Visible;
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Text", (args) =>
 			{
@@ -38,6 +39,10 @@ namespace OSCGui_Forms.Controls
 				FontSize = OscParser.ToInt(args);
 			}));
 
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				IsVisible = OscParser.ToBool(args);
+			}));
 		}
 
 		public void Taint()

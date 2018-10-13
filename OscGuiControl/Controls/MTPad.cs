@@ -47,11 +47,17 @@ namespace OscGuiControl.Controls
 			properties.Add("Color", "Color", "Appearance");
 			properties.Add("Background", "Background", "Appearance");
 			properties.Add("Targets", "Targets", "Events");
+			properties.Add("Visible", "Visible", "Appearance");
 		}
 
 		public MTPad()
 		{
 			oscObject = new OscTree.Object(new OscTree.Address("MTPad" + id++), typeof(float));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				Visible = OscParser.ToBool(args);
+			}, typeof(bool)));
 
 			foreach (var endpoint in oscObject.Endpoints.List)
 			{
@@ -106,6 +112,7 @@ namespace OscGuiControl.Controls
 			result.Color = ForeGround.Color;
 			result.Background = BackGround.Color;
 			result.Targets = OscObject.Targets;
+			result.Visible = Visible;
 			changed = false;
 			return result.Get();
 		}
@@ -118,6 +125,7 @@ namespace OscGuiControl.Controls
 			ForeGround = new SolidColorBrush(json.Color);
 			BackGround = new SolidColorBrush(json.Background);
 			OscObject.Targets = json.Targets;
+			Visible = json.Visible;
 			changed = false;
 			return true;
 		}

@@ -21,6 +21,7 @@ namespace OSCGui_Forms.Controls
 			TextScale = json.TextScale;
 			OscObject.Targets = json.Targets;
 			IsToggle = json.IsToggle;
+			Visible = json.Visible;
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Text", (args) =>
 			{
@@ -30,6 +31,11 @@ namespace OSCGui_Forms.Controls
 			oscObject.Endpoints.Add(new OscTree.Endpoint("TextScale", (args) =>
 			{
 				TextScale = (yGui.Scale)OscParser.ToInt(args);
+			}));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				Visible = OscParser.ToBool(args);
 			}));
 
 			Pressed += Button_Pressed;

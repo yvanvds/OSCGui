@@ -21,6 +21,7 @@ namespace OSCGui_Forms.Controls
 			DisplayName = json.Content as string;
 			ShowValue = json.ShowValue;
 			OscObject.Targets = json.Targets;
+			Visible = json.Visible;
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Value", (args) =>
 			{
@@ -40,6 +41,11 @@ namespace OSCGui_Forms.Controls
 			oscObject.Endpoints.Add(new OscTree.Endpoint("ShowValue", (args) =>
 			{
 				ShowValue = OscParser.ToBool(args);
+			}));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				Visible = OscParser.ToBool(args);
 			}));
 
 			this.ValueChanged += Knob_ValueChanged;

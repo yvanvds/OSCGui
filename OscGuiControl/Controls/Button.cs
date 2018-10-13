@@ -44,6 +44,7 @@ namespace OscGuiControl.Controls
 			properties.Add("Background", "Background", "Appearance");
 			properties.Add("Targets", "Targets", "Events");
 			properties.Add("IsToggle", "Is Toggle", "Events");
+			properties.Add("Visible", "Visible", "Appearance");
 		}
 
 		public Button()
@@ -59,6 +60,11 @@ namespace OscGuiControl.Controls
 			{
 				TextScale = (TextScales)OscParser.ToInt(args);
 			}, typeof(int)));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				Visible = OscParser.ToBool(args);
+			}, typeof(bool)));
 
 			ForeGround = new SolidColorBrush(System.Windows.Media.Colors.Green);
 			Text = "BUTTON";
@@ -141,6 +147,7 @@ namespace OscGuiControl.Controls
 			result.TextScale = TextScale;
 			result.Targets = OscObject.Targets;
 			result.IsToggle = IsToggle;
+			result.Visible = Visible;
 			changed = false;
 			return result.Get();
 		}
@@ -156,6 +163,7 @@ namespace OscGuiControl.Controls
 			TextScale = json.TextScale;
 			OscObject.Targets = json.Targets;
 			IsToggle = json.IsToggle;
+			Visible = json.Visible;
 			changed = false;
 			return true;
 		}

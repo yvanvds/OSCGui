@@ -50,6 +50,7 @@ namespace OscGuiControl.Controls
 			properties.Add("Background", "Background", "Appearance");
 			properties.Add("Accent", "Accent", "Appearance");
 			properties.Add("Targets", "Targets", "Events");
+			properties.Add("Visible", "Visible", "Appearance");
 		}
 
 		public Slider()
@@ -70,6 +71,11 @@ namespace OscGuiControl.Controls
 			{
 				Maximum = OscParser.ToFloat(args);
 			}, typeof(float)));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
+			{
+				Visible = OscParser.ToBool(args);
+			}, typeof(bool)));
 
 			Changed += (s, e) =>
 			{
@@ -141,6 +147,7 @@ namespace OscGuiControl.Controls
 			result.Background = BackGround.Color;
 			result.Handle = Handle.Color;
 			result.Targets = OscObject.Targets;
+			result.Visible = Visible;
 			changed = false;
 			return result.Get();
 		}
@@ -156,6 +163,7 @@ namespace OscGuiControl.Controls
 			Handle = new SolidColorBrush(json.Handle);
 			BackGround = new SolidColorBrush(json.Background);
 			OscObject.Targets = json.Targets;
+			Visible = json.Visible;
 			changed = false;
 			return true;
 		}
