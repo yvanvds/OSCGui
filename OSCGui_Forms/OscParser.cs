@@ -49,5 +49,20 @@ namespace OSCGui_Forms
 				return new Point(Convert.ToDouble(arguments[0]), Convert.ToDouble(arguments[1]));
 			}
 		}
+
+		internal static Color ToColor(object[] arguments)
+		{
+			if (arguments == null) return yGui.Colors.ElementBackground;
+			if (arguments.Length < 1) return yGui.Colors.ElementBackground;
+			if(arguments.Length < 3)
+			{
+				int value = Convert.ToInt32(arguments[0]);
+				return Color.FromRgb(value, value, value);
+			}
+			int r = Convert.ToInt32(arguments[0]);
+			int g = Convert.ToInt32(arguments[1]);
+			int b = Convert.ToInt32(arguments[2]);
+			return Color.FromRgb(r, g, b);
+		}
 	}
 }

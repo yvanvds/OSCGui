@@ -46,6 +46,7 @@ namespace OscGuiControl.Controls
 			properties = new PropertyCollection();
 			properties.Add("ObjName", "Name");
 			properties.Add("Color", "Color", "Appearance");
+			properties.Add("BorderColor", "Border", "Appearance");
 			properties.Add("Centered", "Centered");
 			properties.Add("ShowValue");
 			properties.Add("Targets", "Targets", "Events");
@@ -70,6 +71,16 @@ namespace OscGuiControl.Controls
 			{
 				Visible = OscParser.ToBool(args);
 			}, typeof(bool)));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("ForegroundColor", (args) =>
+			{
+				Color = OscParser.ToColor(args);
+			}));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("BorderColor", (args) =>
+			{
+				BorderColor = OscParser.ToColor(args);
+			}));
 
 			OnValueChanged += (s, e) =>
 			{
@@ -111,7 +122,15 @@ namespace OscGuiControl.Controls
 			set
 			{
 				ForeGround = new SolidColorBrush(value);
-				Border = ForeGround;
+			}
+		}
+
+		public Color BorderColor
+		{
+			get => (Border as SolidColorBrush).Color;
+			set
+			{
+				Border = new SolidColorBrush(value);
 			}
 		}
 
@@ -119,6 +138,7 @@ namespace OscGuiControl.Controls
 		{
 			OscJsonObject result = new OscJsonObject("XYPad", ID, Name);
 			result.Color = Color;
+			result.Background = BorderColor;
 			result.Centered = Centered;
 			result.ShowValue = ShowValue;
 			result.Targets = OscObject.Targets;

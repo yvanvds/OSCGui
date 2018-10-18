@@ -25,6 +25,16 @@ namespace OSCGui_Forms.Controls
 				Visible = OscParser.ToBool(args);
 			}));
 
+			oscObject.Endpoints.Add(new OscTree.Endpoint("ForegroundColor", (args) =>
+			{
+				ForeGround = OscParser.ToColor(args);
+			}));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("BackgroundColor", (args) =>
+			{
+				BackGround = OscParser.ToColor(args);
+			}));
+
 			this.TouchChanged += MTPad_TouchChanged;
 		}
 

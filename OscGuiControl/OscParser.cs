@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace OscGuiControl
 {
@@ -52,6 +53,21 @@ namespace OscGuiControl
 			{
 				return new Point(Convert.ToDouble(arguments[0]), Convert.ToDouble(arguments[1]));
 			}
+		}
+
+		internal static Color ToColor(object[] arguments)
+		{
+			if (arguments == null) return yGuiWPF.Colors.Default;
+			if (arguments.Length < 1) return yGuiWPF.Colors.Default;
+			if (arguments.Length < 3)
+			{
+				byte value = Convert.ToByte(arguments[0]);
+				return Color.FromRgb(value, value, value);
+			}
+			byte r = Convert.ToByte(arguments[0]);
+			byte g = Convert.ToByte(arguments[1]);
+			byte b = Convert.ToByte(arguments[2]);
+			return Color.FromRgb(r, g, b);
 		}
 	}
 }

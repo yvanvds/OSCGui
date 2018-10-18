@@ -17,7 +17,9 @@ namespace OSCGui_Forms.Controls
 
 			Text = (string)json.Content;
 			TextColor = json.Color;
+			BackgroundColor = json.Background;
 			FontSize = json.FontSize;
+
 			if(json.Bold)
 			{
 				if (json.Italic) FontAttributes = Xamarin.Forms.FontAttributes.Bold | Xamarin.Forms.FontAttributes.Italic;
@@ -42,6 +44,16 @@ namespace OSCGui_Forms.Controls
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
 			{
 				IsVisible = OscParser.ToBool(args);
+			}));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("TextColor", (args) =>
+			{
+				TextColor = OscParser.ToColor(args);
+			}));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("BackgroundColor", (args) =>
+			{
+				BackgroundColor = OscParser.ToColor(args);
 			}));
 		}
 

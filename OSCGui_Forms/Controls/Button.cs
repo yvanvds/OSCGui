@@ -38,6 +38,16 @@ namespace OSCGui_Forms.Controls
 				Visible = OscParser.ToBool(args);
 			}));
 
+			oscObject.Endpoints.Add(new OscTree.Endpoint("ForegroundColor", (args) =>
+			{
+				TextColor = OscParser.ToColor(args);
+			}));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("BackgroundColor", (args) =>
+			{
+				BackgroundColor = OscParser.ToColor(args);
+			}));
+
 			Pressed += Button_Pressed;
 		}
 

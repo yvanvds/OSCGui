@@ -78,6 +78,11 @@ namespace OscGuiControl.Controls
 				Visible = OscParser.ToBool(args);
 			}, typeof(bool)));
 
+			oscObject.Endpoints.Add(new OscTree.Endpoint("Color", (args) =>
+			{
+				BrushColor = OscParser.ToColor(args);
+			}));
+
 			OnValueChange += (s, e) =>
 			{
 				OscObject.Send(Value);				

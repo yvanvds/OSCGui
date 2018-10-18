@@ -45,6 +45,7 @@ namespace OscGuiControl.Controls
 			properties.Add("Content", "Text");
 			properties.Add("FontSize");
 			properties.Add("Color", "Color", "Appearance");
+			properties.Add("BackgroundColor", "Background", "Appearance");
 			properties.Add("HorizontalContentAlignment", "Alignment");
 			properties.Add("FontWeight");
 			properties.Add("FontStyle");
@@ -72,6 +73,16 @@ namespace OscGuiControl.Controls
 			{
 				Visibility = OscParser.ToBool(args) ? Visibility.Visible : Visibility.Hidden;
 			}, typeof(bool)));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("TextColor", (args) =>
+			{
+				Color = OscParser.ToColor(args);
+			}));
+
+			oscObject.Endpoints.Add(new OscTree.Endpoint("BackgroundColor", (args) =>
+			{
+				BackgroundColor = OscParser.ToColor(args);
+			}));
 
 			foreach (var endpoint in oscObject.Endpoints.List)
 			{
@@ -124,6 +135,15 @@ namespace OscGuiControl.Controls
 			}
 		}
 
+		public Color BackgroundColor
+		{
+			get => (Background as SolidColorBrush).Color;
+			set
+			{
+				Background = new SolidColorBrush(value);
+			}
+		}
+
 		public new bool IsEnabled
 		{
 			get => base.IsEnabled;
@@ -140,6 +160,7 @@ namespace OscGuiControl.Controls
 			OscJsonObject result = new OscJsonObject("Label", ID, Name);
 			result.Content = Content;
 			result.Color = Color;
+			result.Background = BackgroundColor;
 			result.FontSize = FontSize;
 			result.FontWeight = FontWeight;
 			result.FontStyle = FontStyle;
@@ -156,6 +177,7 @@ namespace OscGuiControl.Controls
 			ObjName = json.Name;
 			Content = json.Content;
 			Color = json.Color;
+			BackgroundColor = json.Background;
 			FontSize = json.FontSize;
 			FontWeight = json.FontWeight;
 			FontStyle = json.FontStyle;
