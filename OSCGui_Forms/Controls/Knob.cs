@@ -25,32 +25,32 @@ namespace OSCGui_Forms.Controls
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Value", (args) =>
 			{
-				Value = OscParser.ToFloat(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Value = OscParser.ToFloat(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Minimum", (args) =>
 			{
-				Minimum = OscParser.ToFloat(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Minimum = OscParser.ToFloat(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Maximum", (args) =>
 			{
-				Maximum = OscParser.ToFloat(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Maximum = OscParser.ToFloat(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("ShowValue", (args) =>
 			{
-				ShowValue = OscParser.ToBool(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { ShowValue = OscParser.ToBool(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
 			{
-				Visible = OscParser.ToBool(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Visible = OscParser.ToBool(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Color", (args) =>
 			{
-				Color = OscParser.ToColor(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Color = OscParser.ToColor(args); });
 			}));
 
 			this.ValueChanged += Knob_ValueChanged;

@@ -36,19 +36,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="OscTree, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\OscTree.1.0.25\lib\netstandard2.0\OscTree.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="shortid, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\shortid.2.0.0\lib\net45\shortid.dll</HintPath>
     </Reference>
-    <Reference Include="SkiaSharp, Version=1.60.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>packages\SkiaSharp.1.60.2\lib\net45\SkiaSharp.dll</HintPath>
+    <Reference Include="SkiaSharp, Version=1.68.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>packages\SkiaSharp.1.68.0\lib\net45\SkiaSharp.dll</HintPath>
     </Reference>
     <Reference Include="SkiaSharp.Extended.Iconify, Version=1.60.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\SkiaSharp.Extended.Iconify.1.60.0\lib\netstandard2.0\SkiaSharp.Extended.Iconify.dll</HintPath>
@@ -56,14 +53,14 @@
     <Reference Include="SkiaSharp.Extended.Iconify.MaterialDesignIcons, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\SkiaSharp.Extended.Iconify.MaterialDesignIcons.2.0.0\lib\netstandard2.0\SkiaSharp.Extended.Iconify.MaterialDesignIcons.dll</HintPath>
     </Reference>
-    <Reference Include="SkiaSharp.Views.Desktop, Version=1.60.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>packages\SkiaSharp.Views.1.60.2\lib\net45\SkiaSharp.Views.Desktop.dll</HintPath>
+    <Reference Include="SkiaSharp.Views.Desktop, Version=1.68.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>packages\SkiaSharp.Views.1.68.0\lib\net45\SkiaSharp.Views.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="SkiaSharp.Views.Gtk, Version=1.60.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>packages\SkiaSharp.Views.1.60.2\lib\net45\SkiaSharp.Views.Gtk.dll</HintPath>
+    <Reference Include="SkiaSharp.Views.Gtk, Version=1.68.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>packages\SkiaSharp.Views.1.68.0\lib\net45\SkiaSharp.Views.Gtk.dll</HintPath>
     </Reference>
-    <Reference Include="SkiaSharp.Views.WPF, Version=1.60.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>packages\SkiaSharp.Views.1.60.2\lib\net45\SkiaSharp.Views.WPF.dll</HintPath>
+    <Reference Include="SkiaSharp.Views.WPF, Version=1.68.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>packages\SkiaSharp.Views.1.68.0\lib\net45\SkiaSharp.Views.WPF.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -75,26 +72,20 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
-    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\interact\InteractServer\InteractServer\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\interact\InteractServer\InteractServer\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\interact\InteractServer\InteractServer\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\interact\InteractServer\InteractServer\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.DataGrid, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.Toolkit, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="yGuiWPF, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\yGuiWPF.1.0.11\lib\net461\yGuiWPF.dll</HintPath>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\..\interact\InteractServer\InteractServer\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +136,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -188,15 +180,25 @@
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\OscTree\OscTree\OscTree.csproj">
+      <Project>{d1017ff2-5812-4ddc-adf0-14f77b7e27bb}</Project>
+      <Name>OscTree</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\yGui\yGuiWPF\yGuiWPF.csproj">
+      <Project>{c555e189-1ffd-4cbd-b375-f596483ccf23}</Project>
+      <Name>yGuiWPF</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>
     <VisualStudio AllowExistingFolder="true" />
   </ProjectExtensions>
-  <Import Project="packages\SkiaSharp.1.60.2\build\net45\SkiaSharp.targets" Condition="Exists('packages\SkiaSharp.1.60.2\build\net45\SkiaSharp.targets')" />
+  <Import Project="packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets" Condition="Exists('packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('packages\SkiaSharp.1.60.2\build\net45\SkiaSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SkiaSharp.1.60.2\build\net45\SkiaSharp.targets'))" />
+    <Error Condition="!Exists('packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SkiaSharp.1.68.0\build\net45\SkiaSharp.targets'))" />
   </Target>
 </Project>

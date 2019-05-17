@@ -21,23 +21,26 @@ namespace OSCGui_Forms.Controls
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Blink", (args) =>
 			{
-				int time = 100;
-				if(args.Length > 0)
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
 				{
-					if (args[0] is int) time = (int)args[0];
-					else if (args[0] is float) time = (int)args[0];
-				}
-				Blink(time);
+					int time = 100;
+					if (args.Length > 0)
+					{
+						if (args[0] is int) time = (int)args[0];
+						else if (args[0] is float) time = (int)args[0];
+					}
+					Blink(time);
+				});
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
 			{
-				Visible = OscParser.ToBool(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Visible = OscParser.ToBool(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Color", (args) =>
 			{
-				Color = OscParser.ToColor(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Color = OscParser.ToColor(args); });
 			}));
 		}
 

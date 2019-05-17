@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using OscTree;
 
 namespace OscGuiControl
@@ -69,5 +70,14 @@ namespace OscGuiControl
 				ctrl.Taint();
 			}
 		}
-	}
+
+        private void PropertyGrid_SelectedObjectChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            foreach(Xceed.Wpf.Toolkit.PropertyGrid.PropertyItem item in (sender as Xceed.Wpf.Toolkit.PropertyGrid.PropertyGrid).Properties)
+            {
+                item.Background = new SolidColorBrush(Colors.White);
+                item.Foreground = new SolidColorBrush(Colors.Black);
+            }
+        }
+    }
 }

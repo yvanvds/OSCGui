@@ -25,27 +25,28 @@ namespace OSCGui_Forms.Controls
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Text", (args) =>
 			{
-				Text = OscParser.ToString(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Text = OscParser.ToString(args); });
+				
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("TextScale", (args) =>
 			{
-				TextScale = (yGui.Scale)OscParser.ToInt(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { TextScale = (yGui.Scale)OscParser.ToInt(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
 			{
-				Visible = OscParser.ToBool(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Visible = OscParser.ToBool(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("ForegroundColor", (args) =>
 			{
-				TextColor = OscParser.ToColor(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { TextColor = OscParser.ToColor(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("BackgroundColor", (args) =>
 			{
-				BackgroundColor = OscParser.ToColor(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { BackgroundColor = OscParser.ToColor(args); });
 			}));
 
 			Pressed += Button_Pressed;

@@ -22,17 +22,17 @@ namespace OSCGui_Forms.Controls
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
 			{
-				Visible = OscParser.ToBool(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Visible = OscParser.ToBool(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("ForegroundColor", (args) =>
 			{
-				ForeGround = OscParser.ToColor(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { ForeGround = OscParser.ToColor(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("BackgroundColor", (args) =>
 			{
-				BackGround = OscParser.ToColor(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { BackGround = OscParser.ToColor(args); });
 			}));
 
 			this.TouchChanged += MTPad_TouchChanged;
@@ -40,7 +40,10 @@ namespace OSCGui_Forms.Controls
 
 		private void MTPad_TouchChanged(object sender, TouchArgs e)
 		{
-			OscObject.Send(new object[] {e.Id, e.Pos.X, e.Pos.Y});
+			int action = 0;
+			if (e.Action == yGui.TouchAction.Pressed) action = 1;
+			else if (e.Action == yGui.TouchAction.Released) action = -1;
+			OscObject.Send(new object[] {e.Id, e.Pos.X, e.Pos.Y, e.Size, action });
 		}
 
 		public void Taint()

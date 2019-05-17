@@ -84,7 +84,7 @@ namespace OscGuiControl.Controls
 
 			OnValueChanged += (s, e) =>
 			{
-				OscObject.Send(new Point(Value.X, Value.Y));
+				OscObject.Send(new object[] { Value.X, Value.Y });
 			};
 
 			foreach (var endpoint in oscObject.Endpoints.List)

@@ -25,27 +25,27 @@ namespace OSCGui_Forms.Controls
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Coordinate", (args) =>
 			{
-				Value = OscParser.ToPoint(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Value = OscParser.ToPoint(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Centered", (args) =>
 			{
-				Centered = OscParser.ToBool(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Centered = OscParser.ToBool(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
 			{
-				Visible = OscParser.ToBool(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Visible = OscParser.ToBool(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("ForegroundColor", (args) =>
 			{
-				ForeGround = OscParser.ToColor(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { ForeGround = OscParser.ToColor(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("BorderColor", (args) =>
 			{
-				Border = OscParser.ToColor(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Border = OscParser.ToColor(args); });
 			}));
 
 			ValueChanged += XYPad_ValueChanged;

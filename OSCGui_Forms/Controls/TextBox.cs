@@ -22,17 +22,17 @@ namespace OSCGui_Forms.Controls
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Text", (args) =>
 			{
-				Text = OscParser.ToString(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { Text = OscParser.ToString(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("FontSize", (args) =>
 			{
-				FontSize = OscParser.ToInt(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { FontSize = OscParser.ToInt(args); });
 			}));
 
 			oscObject.Endpoints.Add(new OscTree.Endpoint("Visible", (args) =>
 			{
-				IsVisible = OscParser.ToBool(args);
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() => { IsVisible = OscParser.ToBool(args); });
 			}));
 
 			TextChanged += TextBox_TextChanged;

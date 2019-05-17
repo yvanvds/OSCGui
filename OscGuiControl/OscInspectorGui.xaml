@@ -9,9 +9,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 	
-	<xctk:PropertyGrid x:Name="PropertyGrid"
-														 Background="#999999"
-														 AutoGenerateProperties="False">
+	<xctk:PropertyGrid  x:Name="PropertyGrid"
+					    Background="#999999"
+                        SelectedObjectChanged="PropertyGrid_SelectedObjectChanged"
+						AutoGenerateProperties="False">
 
 		<xctk:PropertyGrid.EditorDefinitions>
 
@@ -30,7 +31,19 @@
 				</xctk:EditorTemplateDefinition.EditingTemplate>
 			</xctk:EditorTemplateDefinition>
 
-		</xctk:PropertyGrid.EditorDefinitions>
+
+            <xctk:EditorDefinition>
+                <xctk:EditorDefinition.PropertiesDefinitions>
+                    <xctk:PropertyDefinition Name="Text" />
+                    <xctk:PropertyDefinition Name="Name" />
+                </xctk:EditorDefinition.PropertiesDefinitions>
+                <xctk:EditorDefinition.EditorTemplate>
+                    <DataTemplate>
+                        <TextBox Background="White" Foreground="Black"  Text="{Binding Value, Mode=TwoWay}" />
+                    </DataTemplate>
+                </xctk:EditorDefinition.EditorTemplate>
+            </xctk:EditorDefinition>
+        </xctk:PropertyGrid.EditorDefinitions>
 
 	</xctk:PropertyGrid>
 </UserControl>
